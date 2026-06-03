@@ -30,6 +30,38 @@ const products = [
         category: "jeans",
         image: "assets/jeans_black.png",
         description: "Deep black relaxed denim. Engineered for comfort and style with a wide leg profile."
+    },
+    {
+        id: 5,
+        title: "Oversized Heavyweight T-Shirt - Ash",
+        price: "$45.00",
+        category: "tshirts",
+        image: "assets/tshirt_grey.png",
+        description: "A perfect neutral ash grey tee. Minimalist and versatile."
+    },
+    {
+        id: 6,
+        title: "Graphic Oversized T-Shirt - Golden Echo",
+        price: "$55.00",
+        category: "tshirts",
+        image: "assets/tshirt_graphic.png",
+        description: "Black oversized tee featuring a subtle, abstract golden graphic on the back. Premium print."
+    },
+    {
+        id: 7,
+        title: "Relaxed Baggy Denim - Vintage Grey",
+        price: "$85.00",
+        category: "jeans",
+        image: "assets/jeans_grey.png",
+        description: "Stonewashed vintage grey denim. The ultimate relaxed fit for everyday wear."
+    },
+    {
+        id: 8,
+        title: "Baggy Cargo Pants - Olive",
+        price: "$95.00",
+        category: "jeans",
+        image: "assets/jeans_cargo.png",
+        description: "Functional streetwear. Olive green baggy cargo pants with premium utility pockets."
     }
 ];
 
