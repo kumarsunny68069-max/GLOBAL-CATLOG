@@ -1,28 +1,30 @@
 const products = [
     {
         id: 1,
-        title: "Oversized Heavyweight T-Shirt",
-        price: "₹499",
+        title: "Courage Graphic Oversized T-Shirt",
+        price: "₹799",
         category: "tshirts",
-        image: "assets/tshirt_black.png",
-        description: "Crafted from 100% premium heavy cotton. Features a relaxed drop-shoulder fit for the ultimate streetwear silhouette.",
+        image: "assets/courage_black.png",
+        description: "Premium oversized 'Courage' graphic tee. High quality print and relaxed drop-shoulder fit.",
         colors: [
-            { name: "Obsidian", image: "assets/tshirt_black.png", price: "₹499" },
-            { name: "Ghost", image: "assets/tshirt_white.png", price: "₹599" },
-            { name: "Ash", image: "assets/tshirt_grey.png", price: "₹699" },
-            { name: "Sand", image: "assets/tshirt_beige.png", price: "₹699" },
-            { name: "Midnight Navy", image: "assets/tshirt_navy.png", price: "₹699" }
+            { name: "Black", image: "assets/courage_black.png", price: "₹799" },
+            { name: "Blue", image: "assets/courage_blue.png", price: "₹799" },
+            { name: "Brown", image: "assets/courage_brown.png", price: "₹799" },
+            { name: "Grey", image: "assets/courage_grey.png", price: "₹799" }
         ]
     },
     {
         id: 2,
-        title: "Graphic Oversized T-Shirt - Golden Echo",
+        title: "Dream Graphic Oversized T-Shirt",
         price: "₹799",
         category: "tshirts",
-        image: "assets/tshirt_graphic.png",
-        description: "Black oversized tee featuring a subtle, abstract golden graphic on the back. Premium print.",
+        image: "assets/dream_black.png",
+        description: "Premium oversized 'Dream' graphic tee. High quality print and relaxed drop-shoulder fit.",
         colors: [
-            { name: "Black", image: "assets/tshirt_graphic.png", price: "₹799" }
+            { name: "Black", image: "assets/dream_black.png", price: "₹799" },
+            { name: "Blue", image: "assets/dream_blue.png", price: "₹799" },
+            { name: "Brown", image: "assets/dream_brown.png", price: "₹799" },
+            { name: "Grey", image: "assets/dream_grey.png", price: "₹799" }
         ]
     },
     {
