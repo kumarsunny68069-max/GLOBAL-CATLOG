@@ -94,6 +94,30 @@ const products = [
         category: "jeans",
         image: "assets/jeans_brown.png",
         description: "Heavyweight brown denim cargos. Features dual utility pockets and a wide leg finish."
+    },
+    {
+        id: 13,
+        title: "Rebels Oversized T-Shirt - Black",
+        price: "₹799",
+        category: "tshirts",
+        image: "assets/rebels black.png",
+        description: "Premium oversized 'Rebels' graphic tee in black. Bold streetwear statement."
+    },
+    {
+        id: 14,
+        title: "Rebels Oversized T-Shirt - Blue",
+        price: "₹799",
+        category: "tshirts",
+        image: "assets/rebels blue.png",
+        description: "Premium oversized 'Rebels' graphic tee in deep blue. Perfect for everyday casual wear."
+    },
+    {
+        id: 15,
+        title: "Rebels Oversized T-Shirt - Red",
+        price: "₹799",
+        category: "tshirts",
+        image: "assets/rebels red.png",
+        description: "Premium oversized 'Rebels' graphic tee in striking red. Stand out from the crowd."
     }
 ];
 
