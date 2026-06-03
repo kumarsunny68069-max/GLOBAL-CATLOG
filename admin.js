@@ -23,10 +23,10 @@ const initialProducts = [
         image: "assets/courage_black.png",
         description: "Premium oversized 'Courage' graphic tee. High quality print and relaxed drop-shoulder fit.",
         colors: [
-            { name: "Black", image: "assets/courage_black.png", price: "₹799" },
-            { name: "Blue", image: "assets/courage_blue.png", price: "₹799" },
-            { name: "Brown", image: "assets/courage_brown.png", price: "₹799" },
-            { name: "Grey", image: "assets/courage_grey.png", price: "₹799" }
+            { name: "Black", image: "assets/courage_black.png", price: "₹799", inStock: true },
+            { name: "Blue", image: "assets/courage_blue.png", price: "₹799", inStock: true },
+            { name: "Brown", image: "assets/courage_brown.png", price: "₹799", inStock: true },
+            { name: "Grey", image: "assets/courage_grey.png", price: "₹799", inStock: true }
         ],
         inStock: true
     },
@@ -38,10 +38,10 @@ const initialProducts = [
         image: "assets/dream_black.png",
         description: "Premium oversized 'Dream' graphic tee. High quality print and relaxed drop-shoulder fit.",
         colors: [
-            { name: "Black", image: "assets/dream_black.png", price: "₹799" },
-            { name: "Blue", image: "assets/dream_blue.png", price: "₹799" },
-            { name: "Brown", image: "assets/dream_brown.png", price: "₹799" },
-            { name: "Grey", image: "assets/dream_grey.png", price: "₹799" }
+            { name: "Black", image: "assets/dream_black.png", price: "₹799", inStock: true },
+            { name: "Blue", image: "assets/dream_blue.png", price: "₹799", inStock: true },
+            { name: "Brown", image: "assets/dream_brown.png", price: "₹799", inStock: true },
+            { name: "Grey", image: "assets/dream_grey.png", price: "₹799", inStock: true }
         ],
         inStock: true
     },
@@ -53,9 +53,9 @@ const initialProducts = [
         image: "assets/rebels black.png",
         description: "Premium oversized 'Rebels' graphic tee. Bold streetwear statement.",
         colors: [
-            { name: "Black", image: "assets/rebels black.png", price: "₹799" },
-            { name: "Blue", image: "assets/rebels blue.png", price: "₹799" },
-            { name: "Red", image: "assets/rebels red.png", price: "₹799" }
+            { name: "Black", image: "assets/rebels black.png", price: "₹799", inStock: true },
+            { name: "Blue", image: "assets/rebels blue.png", price: "₹799", inStock: true },
+            { name: "Red", image: "assets/rebels red.png", price: "₹799", inStock: true }
         ],
         inStock: true
     },
@@ -169,20 +169,45 @@ onSnapshot(collection(db, "products"), (snapshot) => {
     products.forEach(product => {
         const item = document.createElement('div');
         item.className = 'product-item';
+        item.style.flexDirection = 'column';
+        item.style.alignItems = 'stretch';
         
         const inStock = product.inStock !== false; // Default true
         
+        let colorsHTML = '';
+        if (product.colors && product.colors.length > 0) {
+            colorsHTML = '<div style="margin-top: 15px; border-top: 1px solid #333; padding-top: 15px;"><h4>Colors:</h4>';
+            product.colors.forEach((color, idx) => {
+                const colorInStock = color.inStock !== false;
+                colorsHTML += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 10px; background: #23252e; border-radius: 5px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="${color.image}" style="width: 30px; height: 30px; border-radius: 5px; object-fit: cover;">
+                            <span>${color.name}</span>
+                        </div>
+                        <button class="toggle-color-btn ${colorInStock ? 'in-stock' : 'out-stock'}" data-id="${product.id}" data-colorindex="${idx}" data-instock="${colorInStock}">
+                            ${colorInStock ? 'In Stock' : 'Out of Stock'}
+                        </button>
+                    </div>
+                `;
+            });
+            colorsHTML += '</div>';
+        }
+        
         item.innerHTML = `
-            <div class="product-info">
-                <img src="${product.image}" alt="${product.title}">
-                <div class="product-details">
-                    <h3>${product.title}</h3>
-                    <p>${product.price}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="product-info">
+                    <img src="${product.image}" alt="${product.title}">
+                    <div class="product-details">
+                        <h3>${product.title}</h3>
+                        <p>${product.price}</p>
+                    </div>
                 </div>
+                <button class="toggle-btn ${inStock ? 'in-stock' : 'out-stock'}" data-id="${product.id}" data-instock="${inStock}">
+                    ${inStock ? 'In Stock (All)' : 'Out of Stock (All)'}
+                </button>
             </div>
-            <button class="toggle-btn ${inStock ? 'in-stock' : 'out-stock'}" data-id="${product.id}" data-instock="${inStock}">
-                ${inStock ? 'In Stock' : 'Out of Stock'}
-            </button>
+            ${colorsHTML}
         `;
         adminGrid.appendChild(item);
     });
@@ -204,7 +229,35 @@ onSnapshot(collection(db, "products"), (snapshot) => {
                 console.error("Error updating stock:", error);
                 alert("Error updating stock. Ensure Firestore is in Test Mode.");
                 e.target.disabled = false;
-                e.target.textContent = currentlyInStock ? 'In Stock' : 'Out of Stock';
+            }
+        });
+    });
+
+    document.querySelectorAll('.toggle-color-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const id = e.target.getAttribute('data-id');
+            const colorIndex = parseInt(e.target.getAttribute('data-colorindex'));
+            const currentlyInStock = e.target.getAttribute('data-instock') === 'true';
+            
+            e.target.disabled = true;
+            e.target.textContent = "Updating...";
+            
+            try {
+                // Find product locally
+                const product = products.find(p => p.id.toString() === id);
+                if (!product) throw new Error("Product not found locally");
+                
+                // Update the specific color
+                const updatedColors = [...product.colors];
+                updatedColors[colorIndex].inStock = !currentlyInStock;
+
+                await updateDoc(doc(db, "products", id.toString()), {
+                    colors: updatedColors
+                });
+            } catch (error) {
+                console.error("Error updating color stock:", error);
+                alert("Error updating color stock.");
+                e.target.disabled = false;
             }
         });
     });

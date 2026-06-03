@@ -138,8 +138,9 @@ function openModal(product) {
     if (product.colors && product.colors.length > 0 && colorSelectorContainer) {
         colorSelectorContainer.style.display = 'block';
         
-        // Select the first color by default
-        selectedColor = product.colors[0];
+        // Filter out completely disabled if all colors out of stock? We handle whole product out of stock elsewhere.
+        // Find first in-stock color
+        selectedColor = product.colors.find(c => c.inStock !== false) || product.colors[0];
         modalImage.src = selectedColor.image;
         modalPrice.textContent = selectedColor.price;
         
@@ -147,9 +148,19 @@ function openModal(product) {
             const btn = document.createElement('button');
             btn.className = 'color-btn';
             btn.textContent = color.name;
-            if (index === 0) btn.classList.add('selected');
+            
+            const isOutOfStock = color.inStock === false;
+            
+            if (color === selectedColor) btn.classList.add('selected');
+            if (isOutOfStock) {
+                btn.style.opacity = '0.4';
+                btn.style.textDecoration = 'line-through';
+                btn.style.cursor = 'not-allowed';
+            }
             
             btn.addEventListener('click', () => {
+                if (isOutOfStock) return;
+                
                 document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 selectedColor = color;
