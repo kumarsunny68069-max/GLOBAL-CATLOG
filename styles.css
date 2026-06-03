@@ -72,6 +72,30 @@ body {
     color: var(--accent);
 }
 
+@media (max-width: 768px) {
+    .navbar {
+        flex-wrap: wrap;
+        padding: 1rem 5%;
+    }
+    .logo {
+        font-size: 1.4rem;
+        letter-spacing: 1px;
+    }
+    .cart-icon {
+        font-size: 1.2rem;
+    }
+    .nav-links {
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.8rem;
+        order: 3;
+        gap: 1.5rem;
+    }
+    .nav-links a {
+        font-size: 0.95rem;
+    }
+}
+
 /* Hero Section */
 @keyframes fadeInUp {
     from {
