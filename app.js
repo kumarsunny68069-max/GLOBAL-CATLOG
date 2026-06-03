@@ -42,29 +42,59 @@ const products = [
     },
     {
         id: 4,
-        title: "Relaxed Baggy Denim",
-        price: "₹799",
+        title: "Classic Blue Baggy Jeans",
+        price: "₹1,299",
         category: "jeans",
-        image: "assets/jeans_blue.png",
-        description: "Classic 90s inspired baggy jeans with a slight taper at the bottom. The ultimate relaxed fit.",
-        colors: [
-            { name: "Vintage Blue", image: "assets/jeans_blue.png", price: "₹799" },
-            { name: "Midnight", image: "assets/jeans_black.png", price: "₹999" },
-            { name: "Vintage Grey", image: "assets/jeans_grey.png", price: "₹1,299" },
-            { name: "Ice Wash", image: "assets/jeans_light.png", price: "₹1,299" }
-        ]
+        image: "assets/baggy_jeans_blue.jpeg",
+        description: "Premium streetwear baggy jeans with an ultra-relaxed fit."
     },
     {
         id: 5,
-        title: "Baggy Cargo Pants",
+        title: "Printed Baggy Jeans",
         price: "₹1,499",
         category: "jeans",
-        image: "assets/jeans_brown.png",
-        description: "Functional streetwear. Heavyweight baggy cargo pants with premium utility pockets and wide leg finish.",
-        colors: [
-            { name: "Earth Brown", image: "assets/jeans_brown.png", price: "₹1,499" },
-            { name: "Olive", image: "assets/jeans_cargo.png", price: "₹1,599" }
-        ]
+        image: "assets/baggy_jeans_printed.jpeg",
+        description: "Unique printed streetwear baggy jeans."
+    },
+    {
+        id: 6,
+        title: "Dark Wash Baggy Denim",
+        price: "₹1,299",
+        category: "jeans",
+        image: "assets/bagy.png",
+        description: "Dark wash relaxed fit denim."
+    },
+    {
+        id: 7,
+        title: "Faded Relaxed Jeans",
+        price: "₹1,299",
+        category: "jeans",
+        image: "assets/bagy1.png",
+        description: "Lightly faded streetwear jeans."
+    },
+    {
+        id: 8,
+        title: "Vintage Wash Denim 1",
+        price: "₹1,199",
+        category: "jeans",
+        image: "assets/jean1.jpeg",
+        description: "Classic vintage wash relaxed denim."
+    },
+    {
+        id: 9,
+        title: "Vintage Wash Denim 3",
+        price: "₹1,199",
+        category: "jeans",
+        image: "assets/jean3.jpeg",
+        description: "Timeless vintage style denim."
+    },
+    {
+        id: 10,
+        title: "Vintage Wash Denim 5",
+        price: "₹1,199",
+        category: "jeans",
+        image: "assets/jean5..jpeg",
+        description: "Premium faded vintage denim."
     }
 ];
 
