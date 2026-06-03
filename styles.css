@@ -15,11 +15,15 @@
     font-family: 'Outfit', sans-serif;
 }
 
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     background-color: var(--bg-dark);
     color: var(--text-primary);
     line-height: 1.6;
-    overflow-x: hidden;
 }
 
 /* Navbar */
@@ -522,7 +526,7 @@ body {
 
 .welcome-greeting {
     font-family: 'Noto Sans Devanagari', sans-serif;
-    font-size: 5rem;
+    font-size: clamp(2.5rem, 12vw, 5rem);
     font-weight: 800;
     color: #ffffff;
     opacity: 1; /* Always opaque, controlled by clip-path */
@@ -535,7 +539,7 @@ body {
 }
 
 .welcome-text {
-    font-size: 3rem;
+    font-size: clamp(1.5rem, 6vw, 3rem);
     font-weight: 800;
     color: var(--accent);
     opacity: 0;
