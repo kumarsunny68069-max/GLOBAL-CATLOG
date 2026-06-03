@@ -62,6 +62,38 @@ const products = [
         category: "jeans",
         image: "assets/jeans_cargo.png",
         description: "Functional streetwear. Olive green baggy cargo pants with premium utility pockets."
+    },
+    {
+        id: 9,
+        title: "Oversized Heavyweight T-Shirt - Sand",
+        price: "₹699",
+        category: "tshirts",
+        image: "assets/tshirt_beige.png",
+        description: "Premium oversized tee in a versatile sand beige hue. Ultimate comfort and drop-shoulder fit."
+    },
+    {
+        id: 10,
+        title: "Oversized Heavyweight T-Shirt - Midnight Navy",
+        price: "₹699",
+        category: "tshirts",
+        image: "assets/tshirt_navy.png",
+        description: "Deep navy blue oversized tee. Crafted for daily wear with premium thick cotton."
+    },
+    {
+        id: 11,
+        title: "Relaxed Baggy Denim - Ice Wash",
+        price: "₹1,299",
+        category: "jeans",
+        image: "assets/jeans_light.png",
+        description: "Ultra-light ice blue wash denim. Perfect for a retro 90s aesthetic with a relaxed profile."
+    },
+    {
+        id: 12,
+        title: "Baggy Cargo Pants - Earth Brown",
+        price: "₹1,499",
+        category: "jeans",
+        image: "assets/jeans_brown.png",
+        description: "Heavyweight brown denim cargos. Features dual utility pockets and a wide leg finish."
     }
 ];
 
