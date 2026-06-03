@@ -327,7 +327,7 @@ checkoutForm.addEventListener('submit', (e) => {
     const finalPrice = selectedColor ? selectedColor.price : currentProduct.price;
     const absoluteImageUrl = new URL(finalImage, window.location.origin).href;
     
-    const message = `*NEW ORDER - GLOBAL GRAB* 🛍️\n\n*Product:* ${finalTitle}\n*Size:* ${selectedSize}\n*Price:* ${finalPrice}\n*Image:* ${absoluteImageUrl}\n\n*Delivery Details:*\n*Name:* ${name}\n*Phone:* +91 ${phone}\n*Email:* ${email}\n*Address:* ${address}\n*City:* ${city}\n*State:* ${state}\n*PIN Code:* ${pincode}\n\nIs this available?`;
+    const message = `*NEW ORDER - GLOBAL GRAB* 🛍️\n\n*Product:* ${finalTitle}\n*Size:* ${selectedSize}\n*Price:* ${finalPrice}\n\n*Delivery Details:*\n*Name:* ${name}\n*Phone:* +91 ${phone}\n*Email:* ${email}\n*Address:* ${address}\n*City:* ${city}\n*State:* ${state}\n*PIN Code:* ${pincode}\n\nIs this available?\n\n${absoluteImageUrl}`;
     
     const encodedMessage = encodeURIComponent(message);
     const whatsappNumber = '919317091542';
