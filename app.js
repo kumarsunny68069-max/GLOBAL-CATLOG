@@ -1,123 +1,68 @@
 const products = [
     {
         id: 1,
-        title: "Oversized Heavyweight T-Shirt - Obsidian",
+        title: "Oversized Heavyweight T-Shirt",
         price: "₹499",
         category: "tshirts",
         image: "assets/tshirt_black.png",
-        description: "Crafted from 100% premium heavy cotton. Features a relaxed drop-shoulder fit for the ultimate streetwear silhouette."
+        description: "Crafted from 100% premium heavy cotton. Features a relaxed drop-shoulder fit for the ultimate streetwear silhouette.",
+        colors: [
+            { name: "Obsidian", image: "assets/tshirt_black.png", price: "₹499" },
+            { name: "Ghost", image: "assets/tshirt_white.png", price: "₹599" },
+            { name: "Ash", image: "assets/tshirt_grey.png", price: "₹699" },
+            { name: "Sand", image: "assets/tshirt_beige.png", price: "₹699" },
+            { name: "Midnight Navy", image: "assets/tshirt_navy.png", price: "₹699" }
+        ]
     },
     {
         id: 2,
-        title: "Oversized Heavyweight T-Shirt - Ghost",
-        price: "₹599",
-        category: "tshirts",
-        image: "assets/tshirt_white.png",
-        description: "The essential white oversized tee. Thick, durable fabric that drapes perfectly."
-    },
-    {
-        id: 3,
-        title: "Relaxed Baggy Denim - Vintage Blue",
-        price: "₹799",
-        category: "jeans",
-        image: "assets/jeans_blue.png",
-        description: "Classic 90s inspired baggy jeans with a slight taper at the bottom. Washed for a perfect vintage feel."
-    },
-    {
-        id: 4,
-        title: "Relaxed Baggy Denim - Midnight",
-        price: "₹999",
-        category: "jeans",
-        image: "assets/jeans_black.png",
-        description: "Deep black relaxed denim. Engineered for comfort and style with a wide leg profile."
-    },
-    {
-        id: 5,
-        title: "Oversized Heavyweight T-Shirt - Ash",
-        price: "₹699",
-        category: "tshirts",
-        image: "assets/tshirt_grey.png",
-        description: "A perfect neutral ash grey tee. Minimalist and versatile."
-    },
-    {
-        id: 6,
         title: "Graphic Oversized T-Shirt - Golden Echo",
         price: "₹799",
         category: "tshirts",
         image: "assets/tshirt_graphic.png",
-        description: "Black oversized tee featuring a subtle, abstract golden graphic on the back. Premium print."
+        description: "Black oversized tee featuring a subtle, abstract golden graphic on the back. Premium print.",
+        colors: [
+            { name: "Black", image: "assets/tshirt_graphic.png", price: "₹799" }
+        ]
     },
     {
-        id: 7,
-        title: "Relaxed Baggy Denim - Vintage Grey",
-        price: "₹1,299",
-        category: "jeans",
-        image: "assets/jeans_grey.png",
-        description: "Stonewashed vintage grey denim. The ultimate relaxed fit for everyday wear."
-    },
-    {
-        id: 8,
-        title: "Baggy Cargo Pants - Olive",
-        price: "₹1,599",
-        category: "jeans",
-        image: "assets/jeans_cargo.png",
-        description: "Functional streetwear. Olive green baggy cargo pants with premium utility pockets."
-    },
-    {
-        id: 9,
-        title: "Oversized Heavyweight T-Shirt - Sand",
-        price: "₹699",
-        category: "tshirts",
-        image: "assets/tshirt_beige.png",
-        description: "Premium oversized tee in a versatile sand beige hue. Ultimate comfort and drop-shoulder fit."
-    },
-    {
-        id: 10,
-        title: "Oversized Heavyweight T-Shirt - Midnight Navy",
-        price: "₹699",
-        category: "tshirts",
-        image: "assets/tshirt_navy.png",
-        description: "Deep navy blue oversized tee. Crafted for daily wear with premium thick cotton."
-    },
-    {
-        id: 11,
-        title: "Relaxed Baggy Denim - Ice Wash",
-        price: "₹1,299",
-        category: "jeans",
-        image: "assets/jeans_light.png",
-        description: "Ultra-light ice blue wash denim. Perfect for a retro 90s aesthetic with a relaxed profile."
-    },
-    {
-        id: 12,
-        title: "Baggy Cargo Pants - Earth Brown",
-        price: "₹1,499",
-        category: "jeans",
-        image: "assets/jeans_brown.png",
-        description: "Heavyweight brown denim cargos. Features dual utility pockets and a wide leg finish."
-    },
-    {
-        id: 13,
-        title: "Rebels Oversized T-Shirt - Black",
+        id: 3,
+        title: "Rebels Graphic Oversized T-Shirt",
         price: "₹799",
         category: "tshirts",
         image: "assets/rebels black.png",
-        description: "Premium oversized 'Rebels' graphic tee in black. Bold streetwear statement."
+        description: "Premium oversized 'Rebels' graphic tee. Bold streetwear statement.",
+        colors: [
+            { name: "Black", image: "assets/rebels black.png", price: "₹799" },
+            { name: "Blue", image: "assets/rebels blue.png", price: "₹799" },
+            { name: "Red", image: "assets/rebels red.png", price: "₹799" }
+        ]
     },
     {
-        id: 14,
-        title: "Rebels Oversized T-Shirt - Blue",
+        id: 4,
+        title: "Relaxed Baggy Denim",
         price: "₹799",
-        category: "tshirts",
-        image: "assets/rebels blue.png",
-        description: "Premium oversized 'Rebels' graphic tee in deep blue. Perfect for everyday casual wear."
+        category: "jeans",
+        image: "assets/jeans_blue.png",
+        description: "Classic 90s inspired baggy jeans with a slight taper at the bottom. The ultimate relaxed fit.",
+        colors: [
+            { name: "Vintage Blue", image: "assets/jeans_blue.png", price: "₹799" },
+            { name: "Midnight", image: "assets/jeans_black.png", price: "₹999" },
+            { name: "Vintage Grey", image: "assets/jeans_grey.png", price: "₹1,299" },
+            { name: "Ice Wash", image: "assets/jeans_light.png", price: "₹1,299" }
+        ]
     },
     {
-        id: 15,
-        title: "Rebels Oversized T-Shirt - Red",
-        price: "₹799",
-        category: "tshirts",
-        image: "assets/rebels red.png",
-        description: "Premium oversized 'Rebels' graphic tee in striking red. Stand out from the crowd."
+        id: 5,
+        title: "Baggy Cargo Pants",
+        price: "₹1,499",
+        category: "jeans",
+        image: "assets/jeans_brown.png",
+        description: "Functional streetwear. Heavyweight baggy cargo pants with premium utility pockets and wide leg finish.",
+        colors: [
+            { name: "Earth Brown", image: "assets/jeans_brown.png", price: "₹1,499" },
+            { name: "Olive", image: "assets/jeans_cargo.png", price: "₹1,599" }
+        ]
     }
 ];
 
@@ -176,6 +121,7 @@ filterLinks.forEach(link => {
 
 let currentProduct = null;
 let selectedSize = null;
+let selectedColor = null;
 
 // Checkout Elements
 const checkoutModal = document.getElementById('checkoutModal');
@@ -193,6 +139,7 @@ addToCartBtn.textContent = 'Buy Now';
 function openModal(product) {
     currentProduct = product;
     selectedSize = null;
+    selectedColor = null;
     
     // Dynamic sizes based on category
     const modalSizes = document.getElementById('modalSizes');
@@ -217,9 +164,42 @@ function openModal(product) {
         modalSizes.appendChild(btn);
     });
     
-    modalImage.src = product.image;
+    const colorSelectorContainer = document.getElementById('colorSelectorContainer');
+    const modalColors = document.getElementById('modalColors');
+    if (modalColors) modalColors.innerHTML = '';
+    
+    if (product.colors && product.colors.length > 0 && colorSelectorContainer) {
+        colorSelectorContainer.style.display = 'block';
+        
+        // Select the first color by default
+        selectedColor = product.colors[0];
+        modalImage.src = selectedColor.image;
+        modalPrice.textContent = selectedColor.price;
+        
+        product.colors.forEach((color, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'color-btn';
+            btn.textContent = color.name;
+            if (index === 0) btn.classList.add('selected');
+            
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedColor = color;
+                
+                // Update image and price
+                modalImage.src = color.image;
+                modalPrice.textContent = color.price;
+            });
+            modalColors.appendChild(btn);
+        });
+    } else {
+        if (colorSelectorContainer) colorSelectorContainer.style.display = 'none';
+        modalImage.src = product.image;
+        modalPrice.textContent = product.price;
+    }
+    
     modalTitle.textContent = product.title;
-    modalPrice.textContent = product.price;
     modalDesc.textContent = product.description;
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -244,9 +224,9 @@ addToCartBtn.addEventListener('click', () => {
     closeModal();
     
     // Check if the image path is local and needs absolute url for whatsapp - we only need it for display locally so relative is fine for the modal display
-    checkoutImage.src = currentProduct.image;
-    checkoutTitle.textContent = currentProduct.title;
-    checkoutPrice.textContent = currentProduct.price;
+    checkoutImage.src = selectedColor ? selectedColor.image : currentProduct.image;
+    checkoutTitle.textContent = selectedColor ? `${currentProduct.title} - ${selectedColor.name}` : currentProduct.title;
+    checkoutPrice.textContent = selectedColor ? selectedColor.price : currentProduct.price;
     checkoutSize.textContent = selectedSize;
     checkoutModal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -310,9 +290,12 @@ checkoutForm.addEventListener('submit', (e) => {
     const pincode = document.getElementById('cPincode').value;
     
     // Create absolute URL for the image so WhatsApp can generate a preview
-    const absoluteImageUrl = new URL(currentProduct.image, window.location.origin).href;
+    const finalImage = selectedColor ? selectedColor.image : currentProduct.image;
+    const finalTitle = selectedColor ? `${currentProduct.title} - ${selectedColor.name}` : currentProduct.title;
+    const finalPrice = selectedColor ? selectedColor.price : currentProduct.price;
+    const absoluteImageUrl = new URL(finalImage, window.location.origin).href;
     
-    const message = `*NEW ORDER - GLOBAL GRAB* 🛍️\n\n*Product:* ${currentProduct.title}\n*Size:* ${selectedSize}\n*Price:* ${currentProduct.price}\n*Image:* ${absoluteImageUrl}\n\n*Delivery Details:*\n*Name:* ${name}\n*Phone:* +91 ${phone}\n*Email:* ${email}\n*Address:* ${address}\n*City:* ${city}\n*State:* ${state}\n*PIN Code:* ${pincode}\n\nIs this available?`;
+    const message = `*NEW ORDER - GLOBAL GRAB* 🛍️\n\n*Product:* ${finalTitle}\n*Size:* ${selectedSize}\n*Price:* ${finalPrice}\n*Image:* ${absoluteImageUrl}\n\n*Delivery Details:*\n*Name:* ${name}\n*Phone:* +91 ${phone}\n*Email:* ${email}\n*Address:* ${address}\n*City:* ${city}\n*State:* ${state}\n*PIN Code:* ${pincode}\n\nIs this available?`;
     
     const encodedMessage = encodeURIComponent(message);
     const whatsappNumber = '919317091542';

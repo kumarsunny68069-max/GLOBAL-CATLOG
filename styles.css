@@ -393,6 +393,39 @@ body {
     margin-bottom: 2rem;
 }
 
+.color-selector {
+    margin-bottom: 1.5rem;
+}
+
+.color-selector span {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.colors {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.color-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.color-btn:hover, .color-btn.selected {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(212, 175, 55, 0.1);
+}
+
 .size-selector {
     margin-bottom: 2rem;
 }
