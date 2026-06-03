@@ -179,13 +179,28 @@ function openModal(product) {
     
     modalTitle.textContent = product.title;
     modalDesc.textContent = product.description;
+    
+    if (window.location.hash !== '#modal') {
+        history.pushState(null, '', '#modal');
+    }
+    
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
 
-function closeModal() {
+window.addEventListener('popstate', () => {
     modal.classList.remove('active');
+    checkoutModal.classList.remove('active');
     document.body.style.overflow = '';
+});
+
+function closeModal() {
+    if (window.location.hash === '#modal') {
+        history.back();
+    } else {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 }
 
 closeModalBtn.addEventListener('click', closeModal);
@@ -199,7 +214,9 @@ addToCartBtn.addEventListener('click', () => {
         alert('Please select a size first.');
         return;
     }
-    closeModal();
+    
+    // Switch modals without touching history (keeps the #modal hash active)
+    modal.classList.remove('active');
     
     // Check if the image path is local and needs absolute url for whatsapp - we only need it for display locally so relative is fine for the modal display
     checkoutImage.src = selectedColor ? selectedColor.image : currentProduct.image;
@@ -212,8 +229,12 @@ addToCartBtn.addEventListener('click', () => {
 
 // Close Checkout Modal
 function closeCheckout() {
-    checkoutModal.classList.remove('active');
-    document.body.style.overflow = '';
+    if (window.location.hash === '#modal') {
+        history.back();
+    } else {
+        checkoutModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 }
 closeCheckoutBtn.addEventListener('click', closeCheckout);
 checkoutModal.addEventListener('click', (e) => {
