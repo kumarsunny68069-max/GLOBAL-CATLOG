@@ -219,6 +219,26 @@ body {
     border: 1px solid var(--border-color);
     opacity: 0;
     animation: cardEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    position: relative;
+    cursor: pointer;
+}
+
+.product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.15), transparent);
+    transform: skewX(-25deg);
+    transition: left 0.7s ease;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.product-card:hover::before {
+    left: 200%;
 }
 
 .product-card:hover {
@@ -274,8 +294,9 @@ body {
     justify-content: center;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
     z-index: 1000;
+    perspective: 1500px;
 }
 
 .modal-overlay.active {
@@ -290,8 +311,9 @@ body {
     position: relative;
     border: none;
     border-radius: 0;
-    transform: scale(0.9);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: translateY(120px) scale(0.8) rotateX(-15deg);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     overflow-y: auto;
 }
 
@@ -306,7 +328,9 @@ body {
 }
 
 .modal-overlay.active .modal-content {
-    transform: scale(1);
+    transform: translateY(0) scale(1) rotateX(0deg);
+    opacity: 1;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 40px rgba(212, 175, 55, 0.15);
 }
 
 .close-modal {
