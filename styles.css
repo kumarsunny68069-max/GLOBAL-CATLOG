@@ -345,7 +345,7 @@ body {
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    animation: fadeOutPopup 1s ease-in-out 3s forwards;
+    animation: fadeOutPopup 0.5s ease-in-out 1.8s forwards;
 }
 
 .welcome-content {
@@ -354,14 +354,17 @@ body {
 }
 
 .welcome-greeting {
+    font-family: 'Noto Sans Devanagari', sans-serif;
     font-size: 5rem;
-    font-weight: 400;
-    color: #ffffff; /* Clean white for contrast */
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUpText 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
+    font-weight: 800;
+    color: #ffffff;
+    opacity: 1; /* Always opaque, controlled by clip-path */
+    clip-path: inset(0 100% 0 0); /* Clipped out completely at start */
+    animation: typeWipe 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.2s forwards;
     margin-bottom: 0.5rem;
     letter-spacing: 2px;
+    text-shadow: 0 0 25px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.5); /* Strong Glow effect */
+    display: inline-block;
 }
 
 .welcome-text {
@@ -369,9 +372,14 @@ body {
     font-weight: 800;
     color: var(--accent);
     opacity: 0;
-    transform: translateY(30px) scale(0.9);
-    animation: fadeInUpText 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.8s forwards; /* Delays so it appears after Namaste */
+    transform: translateY(20px) scale(0.9);
+    animation: fadeInUpText 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.9s forwards; /* Appears after Namaste */
     text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+@keyframes typeWipe {
+    0% { clip-path: inset(0 100% 0 0); }
+    100% { clip-path: inset(0 0 0 0); }
 }
 
 @keyframes fadeOutPopup {
