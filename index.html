@@ -92,16 +92,63 @@
                     <h3>Delivery Details</h3>
                     <form id="checkoutForm">
                         <div class="input-group">
-                            <label for="cName">Full Name</label>
-                            <input type="text" id="cName" required placeholder="John Doe">
+                            <label for="cName">Full Name *</label>
+                            <input type="text" id="cName" required placeholder="Aman Sharma">
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="cPhone">Mobile Number *</label>
+                                <div class="phone-input">
+                                    <span>+91</span>
+                                    <input type="tel" id="cPhone" required pattern="[0-9]{10}" placeholder="9876543210" maxlength="10">
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label for="cEmail">Email Address *</label>
+                                <input type="email" id="cEmail" required placeholder="aman@example.com">
+                            </div>
                         </div>
                         <div class="input-group">
-                            <label for="cPhone">Phone Number</label>
-                            <input type="tel" id="cPhone" required placeholder="+91 9317091542">
+                            <label for="cAddress">Complete Address (House No, Street) *</label>
+                            <textarea id="cAddress" required rows="2" placeholder="House No. 123, Street Name..."></textarea>
                         </div>
-                        <div class="input-group">
-                            <label for="cAddress">Complete Address</label>
-                            <textarea id="cAddress" required rows="3" placeholder="Street, City, State, Pincode"></textarea>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="cCity">City *</label>
+                                <input type="text" id="cCity" required placeholder="New Delhi">
+                            </div>
+                            <div class="input-group">
+                                <label for="cState">State *</label>
+                                <select id="cState" required>
+                                    <option value="" disabled selected>Select State</option>
+                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                    <option value="Assam">Assam</option>
+                                    <option value="Bihar">Bihar</option>
+                                    <option value="Chhattisgarh">Chhattisgarh</option>
+                                    <option value="Delhi">Delhi</option>
+                                    <option value="Goa">Goa</option>
+                                    <option value="Gujarat">Gujarat</option>
+                                    <option value="Haryana">Haryana</option>
+                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                    <option value="Jharkhand">Jharkhand</option>
+                                    <option value="Karnataka">Karnataka</option>
+                                    <option value="Kerala">Kerala</option>
+                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Punjab">Punjab</option>
+                                    <option value="Rajasthan">Rajasthan</option>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Telangana">Telangana</option>
+                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                    <option value="Uttarakhand">Uttarakhand</option>
+                                    <option value="West Bengal">West Bengal</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="cPincode">PIN Code *</label>
+                                <input type="text" id="cPincode" required pattern="[0-9]{6}" placeholder="110001" maxlength="6">
+                            </div>
                         </div>
                         <button type="submit" class="whatsapp-btn">
                             <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.082 21.13c-1.494 0-2.939-.379-4.22-.1.096l-4.711 1.236 1.258-4.595c-3.136-2.222-2.518-7.854 1.341-10.742 2.656-1.993 6.314-2.146 9.155-.386 2.842 1.758 4.298 5.161 3.738 8.42-1.077 6.223-7.553 9.479-13.435 6.096z"/></svg>

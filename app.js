@@ -2,7 +2,7 @@ const products = [
     {
         id: 1,
         title: "Oversized Heavyweight T-Shirt - Obsidian",
-        price: "$45.00",
+        price: "₹1,499",
         category: "tshirts",
         image: "assets/tshirt_black.png",
         description: "Crafted from 100% premium heavy cotton. Features a relaxed drop-shoulder fit for the ultimate streetwear silhouette."
@@ -10,7 +10,7 @@ const products = [
     {
         id: 2,
         title: "Oversized Heavyweight T-Shirt - Ghost",
-        price: "$45.00",
+        price: "₹1,499",
         category: "tshirts",
         image: "assets/tshirt_white.png",
         description: "The essential white oversized tee. Thick, durable fabric that drapes perfectly."
@@ -18,7 +18,7 @@ const products = [
     {
         id: 3,
         title: "Relaxed Baggy Denim - Vintage Blue",
-        price: "$85.00",
+        price: "₹2,499",
         category: "jeans",
         image: "assets/jeans_blue.png",
         description: "Classic 90s inspired baggy jeans with a slight taper at the bottom. Washed for a perfect vintage feel."
@@ -26,7 +26,7 @@ const products = [
     {
         id: 4,
         title: "Relaxed Baggy Denim - Midnight",
-        price: "$85.00",
+        price: "₹2,499",
         category: "jeans",
         image: "assets/jeans_black.png",
         description: "Deep black relaxed denim. Engineered for comfort and style with a wide leg profile."
@@ -34,7 +34,7 @@ const products = [
     {
         id: 5,
         title: "Oversized Heavyweight T-Shirt - Ash",
-        price: "$45.00",
+        price: "₹1,499",
         category: "tshirts",
         image: "assets/tshirt_grey.png",
         description: "A perfect neutral ash grey tee. Minimalist and versatile."
@@ -42,7 +42,7 @@ const products = [
     {
         id: 6,
         title: "Graphic Oversized T-Shirt - Golden Echo",
-        price: "$55.00",
+        price: "₹1,799",
         category: "tshirts",
         image: "assets/tshirt_graphic.png",
         description: "Black oversized tee featuring a subtle, abstract golden graphic on the back. Premium print."
@@ -50,7 +50,7 @@ const products = [
     {
         id: 7,
         title: "Relaxed Baggy Denim - Vintage Grey",
-        price: "$85.00",
+        price: "₹2,499",
         category: "jeans",
         image: "assets/jeans_grey.png",
         description: "Stonewashed vintage grey denim. The ultimate relaxed fit for everyday wear."
@@ -58,7 +58,7 @@ const products = [
     {
         id: 8,
         title: "Baggy Cargo Pants - Olive",
-        price: "$95.00",
+        price: "₹2,999",
         category: "jeans",
         image: "assets/jeans_cargo.png",
         description: "Functional streetwear. Olive green baggy cargo pants with premium utility pockets."
@@ -199,12 +199,16 @@ checkoutForm.addEventListener('submit', (e) => {
     
     const name = document.getElementById('cName').value;
     const phone = document.getElementById('cPhone').value;
+    const email = document.getElementById('cEmail').value;
     const address = document.getElementById('cAddress').value;
+    const city = document.getElementById('cCity').value;
+    const state = document.getElementById('cState').value;
+    const pincode = document.getElementById('cPincode').value;
     
     // Create absolute URL for the image so WhatsApp can generate a preview
     const absoluteImageUrl = new URL(currentProduct.image, window.location.origin).href;
     
-    const message = `*NEW ORDER - GLOBAL GRAB* 🛍️\n\n*Product:* ${currentProduct.title}\n*Size:* ${selectedSize}\n*Price:* ${currentProduct.price}\n*Image:* ${absoluteImageUrl}\n\n*Delivery Details:*\n*Name:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}\n\nIs this available?`;
+    const message = `*NEW ORDER - GLOBAL GRAB* 🛍️\n\n*Product:* ${currentProduct.title}\n*Size:* ${selectedSize}\n*Price:* ${currentProduct.price}\n*Image:* ${absoluteImageUrl}\n\n*Delivery Details:*\n*Name:* ${name}\n*Phone:* +91 ${phone}\n*Email:* ${email}\n*Address:* ${address}\n*City:* ${city}\n*State:* ${state}\n*PIN Code:* ${pincode}\n\nIs this available?`;
     
     const encodedMessage = encodeURIComponent(message);
     const whatsappNumber = '919317091542';
