@@ -369,7 +369,8 @@ body {
 
 .modal-image-container {
     flex: 1;
-    height: 400px;
+    height: 45vh;
+    min-height: 300px;
 }
 
 @media (min-width: 768px) {
@@ -463,6 +464,7 @@ body {
 .sizes {
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .size-btn {
