@@ -1,0 +1,24 @@
+{
+  "name": "global-catlog",
+  "version": "1.0.0",
+  "description": "Premium streetwear and baggy clothing catalog featuring oversized t-shirts and relaxed fit jeans.",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kumarsunny68069-max/GLOBAL-CATLOG.git"
+  },
+  "keywords": ["clothing", "catalog", "ecommerce", "streetwear"],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kumarsunny68069-max/GLOBAL-CATLOG/issues"
+  },
+  "homepage": "https://github.com/kumarsunny68069-max/GLOBAL-CATLOG#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}
