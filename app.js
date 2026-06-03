@@ -2,7 +2,7 @@ const products = [
     {
         id: 1,
         title: "Oversized Heavyweight T-Shirt - Obsidian",
-        price: "₹1,499",
+        price: "₹499",
         category: "tshirts",
         image: "assets/tshirt_black.png",
         description: "Crafted from 100% premium heavy cotton. Features a relaxed drop-shoulder fit for the ultimate streetwear silhouette."
@@ -10,7 +10,7 @@ const products = [
     {
         id: 2,
         title: "Oversized Heavyweight T-Shirt - Ghost",
-        price: "₹1,499",
+        price: "₹599",
         category: "tshirts",
         image: "assets/tshirt_white.png",
         description: "The essential white oversized tee. Thick, durable fabric that drapes perfectly."
@@ -18,7 +18,7 @@ const products = [
     {
         id: 3,
         title: "Relaxed Baggy Denim - Vintage Blue",
-        price: "₹2,499",
+        price: "₹799",
         category: "jeans",
         image: "assets/jeans_blue.png",
         description: "Classic 90s inspired baggy jeans with a slight taper at the bottom. Washed for a perfect vintage feel."
@@ -26,7 +26,7 @@ const products = [
     {
         id: 4,
         title: "Relaxed Baggy Denim - Midnight",
-        price: "₹2,499",
+        price: "₹999",
         category: "jeans",
         image: "assets/jeans_black.png",
         description: "Deep black relaxed denim. Engineered for comfort and style with a wide leg profile."
@@ -34,7 +34,7 @@ const products = [
     {
         id: 5,
         title: "Oversized Heavyweight T-Shirt - Ash",
-        price: "₹1,499",
+        price: "₹699",
         category: "tshirts",
         image: "assets/tshirt_grey.png",
         description: "A perfect neutral ash grey tee. Minimalist and versatile."
@@ -42,7 +42,7 @@ const products = [
     {
         id: 6,
         title: "Graphic Oversized T-Shirt - Golden Echo",
-        price: "₹1,799",
+        price: "₹799",
         category: "tshirts",
         image: "assets/tshirt_graphic.png",
         description: "Black oversized tee featuring a subtle, abstract golden graphic on the back. Premium print."
@@ -50,7 +50,7 @@ const products = [
     {
         id: 7,
         title: "Relaxed Baggy Denim - Vintage Grey",
-        price: "₹2,499",
+        price: "₹1,299",
         category: "jeans",
         image: "assets/jeans_grey.png",
         description: "Stonewashed vintage grey denim. The ultimate relaxed fit for everyday wear."
@@ -58,7 +58,7 @@ const products = [
     {
         id: 8,
         title: "Baggy Cargo Pants - Olive",
-        price: "₹2,999",
+        price: "₹1,599",
         category: "jeans",
         image: "assets/jeans_cargo.png",
         description: "Functional streetwear. Olive green baggy cargo pants with premium utility pockets."
@@ -136,7 +136,29 @@ addToCartBtn.textContent = 'Buy Now';
 function openModal(product) {
     currentProduct = product;
     selectedSize = null;
-    sizeBtns.forEach(b => b.classList.remove('selected'));
+    
+    // Dynamic sizes based on category
+    const modalSizes = document.getElementById('modalSizes');
+    modalSizes.innerHTML = '';
+    
+    let availableSizes = [];
+    if (product.category === 'tshirts') {
+        availableSizes = ['M', 'L', 'XL'];
+    } else if (product.category === 'jeans') {
+        availableSizes = ['28', '30', '32', '34', '36'];
+    }
+    
+    availableSizes.forEach(size => {
+        const btn = document.createElement('button');
+        btn.className = 'size-btn';
+        btn.textContent = size;
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedSize = size;
+        });
+        modalSizes.appendChild(btn);
+    });
     
     modalImage.src = product.image;
     modalTitle.textContent = product.title;
@@ -154,16 +176,6 @@ function closeModal() {
 closeModalBtn.addEventListener('click', closeModal);
 modal.addEventListener('click', (e) => {
     if (e.target === modal) closeModal();
-});
-
-// Size Selection Logic
-const sizeBtns = document.querySelectorAll('.size-btn');
-sizeBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        sizeBtns.forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        selectedSize = btn.textContent;
-    });
 });
 
 // Open Checkout Modal
