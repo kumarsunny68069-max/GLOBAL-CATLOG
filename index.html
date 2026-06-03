@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLOBALGRAB | Premium Clothing Catalog</title>
+    <meta name="description" content="Premium streetwear and baggy clothing catalog featuring oversized t-shirts and relaxed fit jeans.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">GLOBALGRAB</div>
+        <ul class="nav-links">
+            <li><a href="#" class="active" data-filter="all">All</a></li>
+            <li><a href="#" data-filter="tshirts">T-Shirts</a></li>
+            <li><a href="#" data-filter="jeans">Jeans</a></li>
+        </ul>
+        <div class="cart-icon">🛒</div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Redefine Comfort.</h1>
+            <p>Premium oversized and baggy streetwear designed for the modern aesthetic.</p>
+            <button class="cta-btn">Shop Collection</button>
+        </div>
+    </header>
+
+    <main class="catalog-section">
+        <div class="catalog-grid" id="catalogGrid">
+            <!-- Items injected by JS -->
+        </div>
+    </main>
+
+    <!-- Product Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">&times;</button>
+            <div class="modal-layout">
+                <div class="modal-image-container">
+                    <img src="" alt="Product Image" id="modalImage">
+                </div>
+                <div class="modal-details">
+                    <h2 id="modalTitle">Product Title</h2>
+                    <p class="price" id="modalPrice">$0.00</p>
+                    <p class="description" id="modalDesc">Product description here.</p>
+                    
+                    <div class="size-selector">
+                        <span>Size:</span>
+                        <div class="sizes">
+                            <button class="size-btn">S</button>
+                            <button class="size-btn">M</button>
+                            <button class="size-btn">L</button>
+                            <button class="size-btn">XL</button>
+                        </div>
+                    </div>
+                    
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
