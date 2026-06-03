@@ -208,14 +208,13 @@ checkoutModal.addEventListener('click', (e) => {
 // Pincode Auto-Detect Logic
 const pincodeInput = document.getElementById('cPincode');
 const cityInput = document.getElementById('cCity');
-const detectedCityText = document.getElementById('detectedCityText');
 const stateSelect = document.getElementById('cState');
 
 pincodeInput.addEventListener('input', async (e) => {
     const pin = e.target.value;
     if (pin.length === 6 && !isNaN(pin)) {
         try {
-            detectedCityText.textContent = "Detecting City...";
+            cityInput.value = "Detecting...";
             
             const response = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
             const data = await response.json();
@@ -223,7 +222,6 @@ pincodeInput.addEventListener('input', async (e) => {
             if (data && data[0].Status === 'Success') {
                 const postOffice = data[0].PostOffice[0];
                 cityInput.value = postOffice.District; 
-                detectedCityText.textContent = `${postOffice.District}`;
                 
                 const state = postOffice.State;
                 const stateOption = Array.from(stateSelect.options).find(opt => opt.value === state || opt.text === state);
@@ -232,15 +230,12 @@ pincodeInput.addEventListener('input', async (e) => {
                 }
             } else {
                 cityInput.value = ""; 
-                detectedCityText.textContent = "Invalid PIN Code";
             }
         } catch (err) {
             console.error('Error fetching pincode details:', err);
             cityInput.value = "";
-            detectedCityText.textContent = "";
         }
-    } else {
-        detectedCityText.textContent = "";
+    } else if (cityInput.value === "Detecting...") {
         cityInput.value = "";
     }
 });
