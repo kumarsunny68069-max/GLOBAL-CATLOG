@@ -354,8 +354,8 @@ body {
 }
 
 .welcome-greeting {
-    font-size: 2.2rem;
-    font-weight: 300;
+    font-size: 5rem;
+    font-weight: 400;
     color: #ffffff; /* Clean white for contrast */
     opacity: 0;
     transform: translateY(20px);
