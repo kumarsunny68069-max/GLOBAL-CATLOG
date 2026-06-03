@@ -345,12 +345,23 @@ body {
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    animation: fadeOutPopup 1s ease-in-out 2.5s forwards;
+    animation: fadeOutPopup 1s ease-in-out 3s forwards;
 }
 
 .welcome-content {
     text-align: center;
     padding: 2rem;
+}
+
+.welcome-greeting {
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: #ffffff; /* Clean white for contrast */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUpText 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
+    margin-bottom: 0.5rem;
+    letter-spacing: 2px;
 }
 
 .welcome-text {
@@ -359,7 +370,7 @@ body {
     color: var(--accent);
     opacity: 0;
     transform: translateY(30px) scale(0.9);
-    animation: fadeInUpText 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s forwards;
+    animation: fadeInUpText 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.8s forwards; /* Delays so it appears after Namaste */
     text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
 }
 
