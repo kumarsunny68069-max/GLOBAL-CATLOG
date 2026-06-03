@@ -205,6 +205,41 @@ checkoutModal.addEventListener('click', (e) => {
     if (e.target === checkoutModal) closeCheckout();
 });
 
+// Pincode Auto-Detect Logic
+const pincodeInput = document.getElementById('cPincode');
+const cityInput = document.getElementById('cCity');
+const stateSelect = document.getElementById('cState');
+
+pincodeInput.addEventListener('input', async (e) => {
+    const pin = e.target.value;
+    if (pin.length === 6 && !isNaN(pin)) {
+        try {
+            // Add a small loading hint to city
+            const oldCity = cityInput.value;
+            cityInput.value = "Detecting...";
+            
+            const response = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+            const data = await response.json();
+            
+            if (data && data[0].Status === 'Success') {
+                const postOffice = data[0].PostOffice[0];
+                cityInput.value = postOffice.District; // District serves as City
+                
+                const state = postOffice.State;
+                const stateOption = Array.from(stateSelect.options).find(opt => opt.value === state || opt.text === state);
+                if (stateOption) {
+                    stateOption.selected = true;
+                }
+            } else {
+                cityInput.value = oldCity; // Reset if invalid pin
+            }
+        } catch (err) {
+            console.error('Error fetching pincode details:', err);
+            cityInput.value = "";
+        }
+    }
+});
+
 // Handle WhatsApp Submit
 checkoutForm.addEventListener('submit', (e) => {
     e.preventDefault();
