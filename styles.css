@@ -217,8 +217,8 @@ body {
 
 .catalog-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1.5rem;
 }
 
 @media (min-width: 600px) {
@@ -316,18 +316,18 @@ body {
 }
 
 .product-info {
-    padding: 1.5rem;
+    padding: 1rem;
 }
 
 .product-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
 }
 
 .product-price {
     color: var(--accent);
-    font-weight: 600;
+    font-weight: 800;
     font-size: 1.1rem;
 }
 
