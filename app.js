@@ -84,9 +84,10 @@ function renderProducts(filter = 'all') {
         ? products 
         : products.filter(p => p.category === filter);
 
-    filteredProducts.forEach(product => {
+    filteredProducts.forEach((product, index) => {
         const card = document.createElement('div');
         card.className = 'product-card';
+        card.style.animationDelay = `${index * 0.1}s`;
         card.innerHTML = `
             <div class="product-image-container">
                 <img src="${product.image}" alt="${product.title}">
