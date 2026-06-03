@@ -117,14 +117,33 @@ filterLinks.forEach(link => {
     });
 });
 
+let currentProduct = null;
+let selectedSize = null;
+
+// Checkout Elements
+const checkoutModal = document.getElementById('checkoutModal');
+const closeCheckoutBtn = document.getElementById('closeCheckout');
+const checkoutImage = document.getElementById('checkoutImage');
+const checkoutTitle = document.getElementById('checkoutTitle');
+const checkoutSize = document.getElementById('checkoutSize');
+const checkoutPrice = document.getElementById('checkoutPrice');
+const checkoutForm = document.getElementById('checkoutForm');
+const addToCartBtn = document.querySelector('.add-to-cart-btn');
+
+addToCartBtn.textContent = 'Buy Now';
+
 // Modal Logic
 function openModal(product) {
+    currentProduct = product;
+    selectedSize = null;
+    sizeBtns.forEach(b => b.classList.remove('selected'));
+    
     modalImage.src = product.image;
     modalTitle.textContent = product.title;
     modalPrice.textContent = product.price;
     modalDesc.textContent = product.description;
     modal.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Prevent scrolling
+    document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
@@ -143,7 +162,54 @@ sizeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         sizeBtns.forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
+        selectedSize = btn.textContent;
     });
+});
+
+// Open Checkout Modal
+addToCartBtn.addEventListener('click', () => {
+    if (!selectedSize) {
+        alert('Please select a size first.');
+        return;
+    }
+    closeModal();
+    
+    // Check if the image path is local and needs absolute url for whatsapp - we only need it for display locally so relative is fine for the modal display
+    checkoutImage.src = currentProduct.image;
+    checkoutTitle.textContent = currentProduct.title;
+    checkoutPrice.textContent = currentProduct.price;
+    checkoutSize.textContent = selectedSize;
+    checkoutModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+});
+
+// Close Checkout Modal
+function closeCheckout() {
+    checkoutModal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+closeCheckoutBtn.addEventListener('click', closeCheckout);
+checkoutModal.addEventListener('click', (e) => {
+    if (e.target === checkoutModal) closeCheckout();
+});
+
+// Handle WhatsApp Submit
+checkoutForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const name = document.getElementById('cName').value;
+    const phone = document.getElementById('cPhone').value;
+    const address = document.getElementById('cAddress').value;
+    
+    // Create absolute URL for the image so WhatsApp can generate a preview
+    const absoluteImageUrl = new URL(currentProduct.image, window.location.origin).href;
+    
+    const message = `*NEW ORDER - GLOBAL GRAB* 🛍️\n\n*Product:* ${currentProduct.title}\n*Size:* ${selectedSize}\n*Price:* ${currentProduct.price}\n*Image:* ${absoluteImageUrl}\n\n*Delivery Details:*\n*Name:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}\n\nIs this available?`;
+    
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappNumber = '919317091542';
+    
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
 });
 
 // Init
