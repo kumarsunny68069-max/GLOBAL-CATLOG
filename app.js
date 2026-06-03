@@ -1,102 +1,31 @@
-const products = [
-    {
-        id: 1,
-        title: "Courage Graphic Oversized T-Shirt",
-        price: "₹799",
-        category: "tshirts",
-        image: "assets/courage_black.png",
-        description: "Premium oversized 'Courage' graphic tee. High quality print and relaxed drop-shoulder fit.",
-        colors: [
-            { name: "Black", image: "assets/courage_black.png", price: "₹799" },
-            { name: "Blue", image: "assets/courage_blue.png", price: "₹799" },
-            { name: "Brown", image: "assets/courage_brown.png", price: "₹799" },
-            { name: "Grey", image: "assets/courage_grey.png", price: "₹799" }
-        ]
-    },
-    {
-        id: 2,
-        title: "Dream Graphic Oversized T-Shirt",
-        price: "₹799",
-        category: "tshirts",
-        image: "assets/dream_black.png",
-        description: "Premium oversized 'Dream' graphic tee. High quality print and relaxed drop-shoulder fit.",
-        colors: [
-            { name: "Black", image: "assets/dream_black.png", price: "₹799" },
-            { name: "Blue", image: "assets/dream_blue.png", price: "₹799" },
-            { name: "Brown", image: "assets/dream_brown.png", price: "₹799" },
-            { name: "Grey", image: "assets/dream_grey.png", price: "₹799" }
-        ]
-    },
-    {
-        id: 3,
-        title: "Rebels Graphic Oversized T-Shirt",
-        price: "₹799",
-        category: "tshirts",
-        image: "assets/rebels black.png",
-        description: "Premium oversized 'Rebels' graphic tee. Bold streetwear statement.",
-        colors: [
-            { name: "Black", image: "assets/rebels black.png", price: "₹799" },
-            { name: "Blue", image: "assets/rebels blue.png", price: "₹799" },
-            { name: "Red", image: "assets/rebels red.png", price: "₹799" }
-        ]
-    },
-    {
-        id: 4,
-        title: "Classic Blue Baggy Jeans",
-        price: "₹1,299",
-        category: "jeans",
-        image: "assets/baggy_jeans_blue.jpeg",
-        description: "Premium streetwear baggy jeans with an ultra-relaxed fit."
-    },
-    {
-        id: 5,
-        title: "Printed Baggy Jeans",
-        price: "₹1,499",
-        category: "jeans",
-        image: "assets/baggy_jeans_printed.jpeg",
-        description: "Unique printed streetwear baggy jeans."
-    },
-    {
-        id: 6,
-        title: "Dark Wash Baggy Denim",
-        price: "₹1,299",
-        category: "jeans",
-        image: "assets/bagy.png",
-        description: "Dark wash relaxed fit denim."
-    },
-    {
-        id: 7,
-        title: "Faded Relaxed Jeans",
-        price: "₹1,299",
-        category: "jeans",
-        image: "assets/bagy1.png",
-        description: "Lightly faded streetwear jeans."
-    },
-    {
-        id: 8,
-        title: "Vintage Wash Denim 1",
-        price: "₹1,199",
-        category: "jeans",
-        image: "assets/jean1.jpeg",
-        description: "Classic vintage wash relaxed denim."
-    },
-    {
-        id: 9,
-        title: "Vintage Wash Denim 3",
-        price: "₹1,199",
-        category: "jeans",
-        image: "assets/jean3.jpeg",
-        description: "Timeless vintage style denim."
-    },
-    {
-        id: 10,
-        title: "Vintage Wash Denim 5",
-        price: "₹1,199",
-        category: "jeans",
-        image: "assets/jean5..jpeg",
-        description: "Premium faded vintage denim."
-    }
-];
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCQoDu0ZDyvhA7HsIWvYqXZi3Ka5w3VE3o",
+  authDomain: "globalgrab-catlog.firebaseapp.com",
+  projectId: "globalgrab-catlog",
+  storageBucket: "globalgrab-catlog.firebasestorage.app",
+  messagingSenderId: "75700633115",
+  appId: "1:75700633115:web:6c8a47a4ce1258c60ec2be",
+  measurementId: "G-NWV1LVDB69"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let products = [];
+let currentFilter = 'all';
+
+// Listen to products in real-time
+onSnapshot(collection(db, "products"), (snapshot) => {
+    products = [];
+    snapshot.forEach(doc => products.push(doc.data()));
+    products.sort((a, b) => a.id - b.id);
+    renderProducts(currentFilter);
+}, (error) => {
+    console.error("Error fetching products. Make sure Firestore is created in test mode.", error);
+});
 
 const catalogGrid = document.getElementById('catalogGrid');
 const filterLinks = document.querySelectorAll('.nav-links a');
@@ -120,10 +49,14 @@ function renderProducts(filter = 'all') {
     filteredProducts.forEach((product, index) => {
         const card = document.createElement('div');
         card.className = 'product-card';
+        if (product.inStock === false) {
+            card.classList.add('out-of-stock');
+        }
         card.style.animationDelay = `${index * 0.1}s`;
         card.innerHTML = `
             <div class="product-image-container">
                 <img src="${product.image}" alt="${product.title}">
+                ${product.inStock === false ? '<div class="out-of-stock-badge">Out of Stock</div>' : ''}
             </div>
             <div class="product-info">
                 <h3 class="product-title">${product.title}</h3>
@@ -131,7 +64,9 @@ function renderProducts(filter = 'all') {
             </div>
         `;
         
-        card.addEventListener('click', () => openModal(product));
+        if (product.inStock !== false) {
+            card.addEventListener('click', () => openModal(product));
+        }
         catalogGrid.appendChild(card);
     });
 }
@@ -335,5 +270,3 @@ checkoutForm.addEventListener('submit', (e) => {
     window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
 });
 
-// Init
-renderProducts();

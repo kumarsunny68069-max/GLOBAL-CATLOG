@@ -292,6 +292,29 @@ body {
     transform: scale(1.05);
 }
 
+.out-of-stock-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #F44336;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    border: 2px solid #F44336;
+    text-transform: uppercase;
+    z-index: 10;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 0 20px rgba(244, 67, 54, 0.4);
+}
+
+.product-card.out-of-stock img {
+    filter: grayscale(80%) brightness(0.7);
+}
+
 .product-info {
     padding: 1.5rem;
 }
@@ -522,6 +545,14 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: background 0.3s ease;
+}
+
+.add-to-cart-btn:disabled {
+    background: #333;
+    color: #888;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 .add-to-cart-btn:hover {
