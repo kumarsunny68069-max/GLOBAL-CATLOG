@@ -110,12 +110,12 @@ body {
 }
 
 .hero {
-    min-height: 80vh;
+    min-height: 55vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 0 5%;
+    padding: 4rem 5% 2rem 5%;
     position: relative;
     overflow: hidden;
     background: var(--bg-dark);
@@ -196,9 +196,9 @@ body {
 }
 
 .hero h1 {
-    font-size: clamp(3.2rem, 8vw, 5.5rem);
-    line-height: 1.05;
-    margin-bottom: 1.5rem;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    line-height: 1.1;
+    margin-bottom: 1rem;
     color: #fff;
     text-shadow: 0 10px 30px rgba(0,0,0,0.5);
     opacity: 0;
@@ -206,10 +206,10 @@ body {
 }
 
 .hero p {
-    font-size: clamp(1rem, 1.8vw, 1.2rem);
+    font-size: clamp(0.9rem, 1.8vw, 1.1rem);
     color: #b0b0b0;
-    line-height: 1.6;
-    margin-bottom: 2.5rem;
+    line-height: 1.5;
+    margin-bottom: 2rem;
     max-width: 600px;
     opacity: 0;
     animation: fadeInUp 1s ease forwards 0.4s;
@@ -244,8 +244,8 @@ body {
 
 .hero-stats {
     display: flex;
-    gap: 1.5rem;
-    margin-top: 3.5rem;
+    gap: 1rem;
+    margin-top: 2rem;
     opacity: 0;
     animation: fadeInUp 1s ease forwards 0.8s;
     flex-wrap: wrap;
@@ -253,11 +253,11 @@ body {
 }
 
 .hero-stats span {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     font-weight: 500;
     color: #e0e0e0;
     background: rgba(255, 255, 255, 0.05);
-    padding: 0.6rem 1.2rem;
+    padding: 0.5rem 1rem;
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
