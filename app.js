@@ -448,12 +448,30 @@ checkoutForm.addEventListener('submit', (e) => {
     const encodedMessage = encodeURIComponent(message);
     const whatsappNumber = '919317091542';
     
+    // 1. Open WhatsApp in new tab
     window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
     
-    // Clear cart after redirect
+    // 2. Clear Cart and Update UI
     cart = [];
     saveCart();
     updateCartUI();
-    closeCheckout();
+    
+    // 3. Close Checkout Modal
+    checkoutModal.style.display = 'none';
+    
+    // 4. Show Success Modal
+    const successModal = document.getElementById('successModal');
+    successModal.style.display = 'flex';
+    
+    // 5. Reset the form
+    checkoutForm.reset();
 });
 
+// Setup Success Modal Close Handlers
+const successModal = document.getElementById('successModal');
+document.querySelector('.close-success').addEventListener('click', () => {
+    successModal.style.display = 'none';
+});
+document.getElementById('continueShoppingBtn').addEventListener('click', () => {
+    successModal.style.display = 'none';
+});
