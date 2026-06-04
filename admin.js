@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCQoDu0ZDyvhA7HsIWvYqXZi3Ka5w3VE3o",
@@ -13,6 +14,51 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+
+// Authentication Logic
+const loginContainer = document.getElementById('loginContainer');
+const adminDashboard = document.getElementById('adminDashboard');
+const loginForm = document.getElementById('loginForm');
+const logoutBtn = document.getElementById('logoutBtn');
+
+// Listen for auth state changes
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // User is logged in
+        loginContainer.style.display = 'none';
+        adminDashboard.style.display = 'block';
+        logoutBtn.style.display = 'block';
+    } else {
+        // User is logged out
+        loginContainer.style.display = 'block';
+        adminDashboard.style.display = 'none';
+        logoutBtn.style.display = 'none';
+    }
+});
+
+// Handle Login
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('adminEmail').value;
+    const password = document.getElementById('adminPassword').value;
+    
+    signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Logged in successfully
+            loginForm.reset();
+        })
+        .catch((error) => {
+            alert("Login Failed: " + error.message);
+        });
+});
+
+// Handle Logout
+logoutBtn.addEventListener('click', () => {
+    signOut(auth).catch((error) => {
+        console.error("Logout Error", error);
+    });
+});
 
 const initialProducts = [
     {
@@ -367,9 +413,11 @@ function createColorRow() {
         </div>
         <button type="button" class="remove-color-btn">X</button>
     `;
+
     row.querySelector('.remove-color-btn').addEventListener('click', () => {
         row.remove();
     });
+
     return row;
 }
 
@@ -379,40 +427,25 @@ if (addColorBtn) {
     });
 }
 
-// Helper function to compress and convert image to Base64
-function compressImageToBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
-            const img = new Image();
-            img.src = event.target.result;
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                // Max width/height to compress
-                const MAX_WIDTH = 800;
-                let width = img.width;
-                let height = img.height;
-                
-                if (width > MAX_WIDTH) {
-                    height = Math.round((height * MAX_WIDTH) / width);
-                    width = MAX_WIDTH;
-                }
-                
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(img, 0, 0, width, height);
-                
-                // Compress to WebP or JPEG, quality 0.7
-                const base64String = canvas.toDataURL('image/jpeg', 0.7);
-                resolve(base64String);
-            };
-            img.onerror = (error) => reject(error);
-        };
-        reader.onerror = (error) => reject(error);
+// Helper function to upload image to ImgBB
+async function uploadToImgBB(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    // The user's ImgBB API key
+    const apiKey = 'd8d781f490f26e9220b1d1f189935d30';
+    
+    const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+        method: 'POST',
+        body: formData
     });
+    
+    const data = await response.json();
+    if (data.success) {
+        return data.data.url; // Returns the short, public ImgBB URL
+    } else {
+        throw new Error(data.error ? data.error.message : 'ImgBB Upload Failed');
+    }
 }
 
 // Handle Form Submission
@@ -424,7 +457,7 @@ if (addProductForm) {
         e.preventDefault();
         
         submitBtn.disabled = true;
-        submitBtn.textContent = "Compressing Images & Saving...";
+        submitBtn.textContent = "Uploading Images & Saving...";
         
         try {
             const editId = document.getElementById('editProductId').value;
@@ -438,10 +471,10 @@ if (addProductForm) {
             // Generate a unique ID if new, or use editId
             const productId = editId ? parseInt(editId) : Date.now();
             
-            // Compress Base Image (if a new one is selected)
+            // Upload Base Image (if new file is provided, use it, else keep old)
             let baseImageUrl = '';
             if (baseImageFile) {
-                baseImageUrl = await compressImageToBase64(baseImageFile);
+                baseImageUrl = await uploadToImgBB(baseImageFile);
             } else if (editId && window.currentEditProductImage) {
                 baseImageUrl = window.currentEditProductImage; // keep existing image
             } else {
@@ -458,10 +491,9 @@ if (addProductForm) {
                 const cImageFile = row.querySelector('.cImage').files[0];
                 const cExistingImage = row.querySelector('.cExistingImage').value;
                 
-                // Compress Color Image
                 let cImageUrl = '';
                 if (cImageFile) {
-                    cImageUrl = await compressImageToBase64(cImageFile);
+                    cImageUrl = await uploadToImgBB(cImageFile);
                 } else if (cExistingImage) {
                     cImageUrl = cExistingImage; // keep existing
                 } else {

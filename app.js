@@ -55,7 +55,7 @@ function renderProducts(filter = 'all') {
         card.style.animationDelay = `${index * 0.1}s`;
         card.innerHTML = `
             <div class="product-image-container">
-                <img src="${product.image}" alt="${product.title}" loading="lazy">
+                <img src="${product.image}" alt="${product.title}">
                 ${product.inStock === false ? '<div class="out-of-stock-badge">Out of Stock</div>' : ''}
                 ${product.originalPrice ? '<div class="sale-badge" style="position:absolute; top:10px; left:10px; background:var(--accent); color:black; padding:5px 10px; border-radius:5px; font-size:0.8rem; font-weight:bold; z-index:2;">SALE</div>' : ''}
             </div>
@@ -428,13 +428,22 @@ checkoutForm.addEventListener('submit', (e) => {
     
     // Build the order summary
     let orderSummary = "";
+    let imageLinks = "\n\n*Product Images:*\n";
     cart.forEach((item, i) => {
         orderSummary += `${i+1}. ${item.title} (Size: ${item.size}) - ${item.price}\n`;
+        
+        // Make image URLs absolute for WhatsApp preview
+        try {
+            const absUrl = new URL(item.image, window.location.origin).href;
+            imageLinks += `${absUrl}\n`;
+        } catch(e) {
+            imageLinks += `${item.image}\n`; // Fallback if already absolute or invalid
+        }
     });
     
     const total = cartTotalPrice.textContent;
     
-    const message = `*NEW ORDER - GLOBAL GRAB* 🛍️\n\n*Items:*\n${orderSummary}\n*Total Price:* ${total}\n\n*Delivery Details:*\n*Name:* ${name}\n*Phone:* +91 ${phone}\n*Email:* ${email}\n*Address:* ${address}\n*City:* ${city}\n*State:* ${state}\n*PIN Code:* ${pincode}\n\nIs this available?`;
+    const message = `*NEW ORDER - GLOBAL GRAB* 🛍️\n\n*Items:*\n${orderSummary}\n*Total Price:* ${total}\n\n*Delivery Details:*\n*Name:* ${name}\n*Phone:* +91 ${phone}\n*Email:* ${email}\n*Address:* ${address}\n*City:* ${city}\n*State:* ${state}\n*PIN Code:* ${pincode}\n\nIs this available?${imageLinks}`;
     
     const encodedMessage = encodeURIComponent(message);
     const whatsappNumber = '919317091542';
