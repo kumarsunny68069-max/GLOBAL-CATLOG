@@ -303,8 +303,8 @@ function createColorRow() {
             <input type="text" class="cName" required placeholder="e.g. Red">
         </div>
         <div style="flex:1;">
-            <label style="font-size:0.8rem; color:#aaa;">Color Image URL</label>
-            <input type="text" class="cImage" required placeholder="e.g. assets/color.png">
+            <label style="font-size:0.8rem; color:#aaa;">Color Image</label>
+            <input type="file" class="cImage" accept="image/*" required>
         </div>
         <button type="button" class="remove-color-btn">X</button>
     `;
@@ -320,6 +320,42 @@ if (addColorBtn) {
     });
 }
 
+// Helper function to compress and convert image to Base64
+function compressImageToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Max width/height to compress
+                const MAX_WIDTH = 800;
+                let width = img.width;
+                let height = img.height;
+                
+                if (width > MAX_WIDTH) {
+                    height = Math.round((height * MAX_WIDTH) / width);
+                    width = MAX_WIDTH;
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Compress to WebP or JPEG, quality 0.7
+                const base64String = canvas.toDataURL('image/jpeg', 0.7);
+                resolve(base64String);
+            };
+            img.onerror = (error) => reject(error);
+        };
+        reader.onerror = (error) => reject(error);
+    });
+}
+
 // Handle Form Submission
 const addProductForm = document.getElementById('addProductForm');
 const submitBtn = document.getElementById('submitBtn');
@@ -329,17 +365,20 @@ if (addProductForm) {
         e.preventDefault();
         
         submitBtn.disabled = true;
-        submitBtn.textContent = "Saving Product...";
+        submitBtn.textContent = "Compressing Images & Saving...";
         
         try {
             const title = document.getElementById('pTitle').value;
             const price = document.getElementById('pPrice').value;
             const category = document.getElementById('pCategory').value;
             const description = document.getElementById('pDesc').value;
-            const baseImageUrl = document.getElementById('pImage').value;
+            const baseImageFile = document.getElementById('pImage').files[0];
             
             // Generate a unique ID (using timestamp)
             const newId = Date.now();
+            
+            // Compress Base Image
+            const baseImageUrl = await compressImageToBase64(baseImageFile);
             
             // Process Colors
             const colors = [];
@@ -348,7 +387,10 @@ if (addProductForm) {
             for (let i = 0; i < colorElements.length; i++) {
                 const row = colorElements[i];
                 const cName = row.querySelector('.cName').value;
-                const cImageUrl = row.querySelector('.cImage').value;
+                const cImageFile = row.querySelector('.cImage').files[0];
+                
+                // Compress Color Image
+                const cImageUrl = await compressImageToBase64(cImageFile);
                 
                 colors.push({
                     name: cName,
@@ -379,7 +421,7 @@ if (addProductForm) {
             
         } catch (error) {
             console.error("Error adding product:", error);
-            alert("Failed to add product. Make sure Firestore is connected.");
+            alert("Failed to add product. Error processing images or saving to database.");
         } finally {
             submitBtn.disabled = false;
             submitBtn.textContent = "Add Product";
