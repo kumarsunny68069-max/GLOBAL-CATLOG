@@ -55,7 +55,31 @@
         </div>
     </main>
 
-    <!-- Product Modal -->
+    <!-- Cart Sidebar -->
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button id="closeCartBtn" class="close-btn">&times;</button>
+        </div>
+        <div id="cartItems" class="cart-items">
+            <!-- Cart items will go here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotalPrice">₹0</span>
+            </div>
+            <button id="checkoutCartBtn" class="cta-btn" style="width:100%; margin-top:10px;">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Floating Cart Button -->
+    <div id="floatingCartBtn" class="floating-cart">
+        <span class="cart-icon">🛒</span>
+        <span id="cartCount" class="cart-count">0</span>
+    </div>
+
+    <!-- Firebase SDK (Module version) -->
     <div class="modal-overlay" id="productModal">
         <div class="modal-content">
             <button class="close-modal" id="closeModal">&times;</button>
@@ -82,8 +106,16 @@
                         </div>
                     </div>
                     
-                    <button class="add-to-cart-btn">Add to Cart</button>
+                    <button class="add-to-cart-btn">Buy Now</button>
+                
+                <!-- Related Products Section -->
+                <div class="related-products-section">
+                    <h4>You May Also Like</h4>
+                    <div class="related-products-grid" id="relatedProductsGrid">
+                        <!-- Related products populated via JS -->
+                    </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>

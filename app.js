@@ -180,6 +180,37 @@ function openModal(product) {
     modalTitle.textContent = product.title;
     modalDesc.textContent = product.description;
     
+    // --- Related Products Logic ---
+    const relatedGrid = document.getElementById('relatedProductsGrid');
+    if (relatedGrid) {
+        relatedGrid.innerHTML = '';
+        
+        // Find 3 products from same category, excluding current product
+        const related = products.filter(p => p.category === product.category && p.id !== product.id && p.inStock !== false);
+        
+        // Shuffle and pick top 3
+        const shuffled = related.sort(() => 0.5 - Math.random()).slice(0, 3);
+        
+        shuffled.forEach(rel => {
+            const relCard = document.createElement('div');
+            relCard.className = 'related-product-card';
+            relCard.innerHTML = `
+                <img src="${rel.image}" alt="${rel.title}">
+                <p>${rel.title}</p>
+                <p style="color:var(--accent);">${rel.price}</p>
+            `;
+            // Click to open this product
+            relCard.addEventListener('click', () => {
+                openModal(rel);
+            });
+            relatedGrid.appendChild(relCard);
+        });
+        
+        if (shuffled.length === 0) {
+            relatedGrid.innerHTML = '<p style="color:#aaa; font-size:0.8rem;">No related items found.</p>';
+        }
+    }
+    
     if (window.location.hash !== '#modal') {
         history.pushState(null, '', '#modal');
     }
@@ -208,21 +239,116 @@ modal.addEventListener('click', (e) => {
     if (e.target === modal) closeModal();
 });
 
-// Open Checkout Modal
+// --- Cart System Logic ---
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+const cartSidebar = document.getElementById('cartSidebar');
+const floatingCartBtn = document.getElementById('floatingCartBtn');
+const cartCount = document.getElementById('cartCount');
+const cartItemsContainer = document.getElementById('cartItems');
+const cartTotalPrice = document.getElementById('cartTotalPrice');
+const closeCartBtn = document.getElementById('closeCartBtn');
+const checkoutCartBtn = document.getElementById('checkoutCartBtn');
+
+function updateCartUI() {
+    cartCount.textContent = cart.length;
+    cartItemsContainer.innerHTML = '';
+    
+    let total = 0;
+    
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p style="text-align:center; color:#aaa; margin-top:20px;">Your cart is empty.</p>';
+    } else {
+        cart.forEach((item, index) => {
+            // Parse price string to number (e.g. "₹1,299" -> 1299)
+            const priceNum = parseInt(item.price.replace(/[^\d]/g, ''), 10) || 0;
+            total += priceNum;
+            
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'cart-item';
+            itemDiv.innerHTML = `
+                <img src="${item.image}" alt="${item.title}">
+                <div class="cart-item-info">
+                    <h4>${item.title}</h4>
+                    <p>Size: ${item.size}</p>
+                    <p style="font-weight:bold; color:var(--accent); margin-top:5px;">${item.price}</p>
+                </div>
+                <button class="remove-item-btn" data-index="${index}">&times;</button>
+            `;
+            cartItemsContainer.appendChild(itemDiv);
+        });
+    }
+    
+    cartTotalPrice.textContent = `₹${total.toLocaleString('en-IN')}`;
+    
+    // Attach remove listeners
+    document.querySelectorAll('.remove-item-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const idx = parseInt(e.target.getAttribute('data-index'));
+            cart.splice(idx, 1);
+            saveCart();
+            updateCartUI();
+        });
+    });
+}
+
+function saveCart() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// Initial UI update
+updateCartUI();
+
+floatingCartBtn.addEventListener('click', () => {
+    cartSidebar.classList.add('active');
+});
+
+closeCartBtn.addEventListener('click', () => {
+    cartSidebar.classList.remove('active');
+});
+
+// Update the Add to Cart button behavior
+addToCartBtn.textContent = 'Add to Cart';
+
 addToCartBtn.addEventListener('click', () => {
     if (!selectedSize) {
         alert('Please select a size first.');
         return;
     }
     
-    // Switch modals without touching history (keeps the #modal hash active)
-    modal.classList.remove('active');
+    const finalImage = selectedColor ? selectedColor.image : currentProduct.image;
+    const finalTitle = selectedColor ? `${currentProduct.title} - ${selectedColor.name}` : currentProduct.title;
+    const finalPrice = selectedColor ? selectedColor.price : currentProduct.price;
     
-    // Check if the image path is local and needs absolute url for whatsapp - we only need it for display locally so relative is fine for the modal display
-    checkoutImage.src = selectedColor ? selectedColor.image : currentProduct.image;
-    checkoutTitle.textContent = selectedColor ? `${currentProduct.title} - ${selectedColor.name}` : currentProduct.title;
-    checkoutPrice.textContent = selectedColor ? selectedColor.price : currentProduct.price;
-    checkoutSize.textContent = selectedSize;
+    cart.push({
+        title: finalTitle,
+        image: finalImage,
+        price: finalPrice,
+        size: selectedSize
+    });
+    
+    saveCart();
+    updateCartUI();
+    
+    // Close modal and open cart sidebar
+    closeModal();
+    cartSidebar.classList.add('active');
+});
+
+// Open Checkout Modal from Cart
+checkoutCartBtn.addEventListener('click', () => {
+    if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
+    
+    cartSidebar.classList.remove('active');
+    
+    // Update Checkout UI for multiple items
+    checkoutImage.style.display = 'none'; // hide single image
+    checkoutTitle.textContent = `${cart.length} item(s) in order`;
+    checkoutSize.textContent = "Multiple";
+    checkoutPrice.textContent = cartTotalPrice.textContent;
+    
     checkoutModal.classList.add('active');
     document.body.style.overflow = 'hidden';
 });
@@ -288,17 +414,25 @@ checkoutForm.addEventListener('submit', (e) => {
     const state = document.getElementById('cState').value;
     const pincode = document.getElementById('cPincode').value;
     
-    // Create absolute URL for the image so WhatsApp can generate a preview
-    const finalImage = selectedColor ? selectedColor.image : currentProduct.image;
-    const finalTitle = selectedColor ? `${currentProduct.title} - ${selectedColor.name}` : currentProduct.title;
-    const finalPrice = selectedColor ? selectedColor.price : currentProduct.price;
-    const absoluteImageUrl = new URL(finalImage, window.location.origin).href;
+    // Build the order summary
+    let orderSummary = "";
+    cart.forEach((item, i) => {
+        orderSummary += `${i+1}. ${item.title} (Size: ${item.size}) - ${item.price}\n`;
+    });
     
-    const message = `*NEW ORDER - GLOBAL GRAB* 🛍️\n\n*Product:* ${finalTitle}\n*Size:* ${selectedSize}\n*Price:* ${finalPrice}\n\n*Delivery Details:*\n*Name:* ${name}\n*Phone:* +91 ${phone}\n*Email:* ${email}\n*Address:* ${address}\n*City:* ${city}\n*State:* ${state}\n*PIN Code:* ${pincode}\n\nIs this available?\n\n${absoluteImageUrl}`;
+    const total = cartTotalPrice.textContent;
+    
+    const message = `*NEW ORDER - GLOBAL GRAB* 🛍️\n\n*Items:*\n${orderSummary}\n*Total Price:* ${total}\n\n*Delivery Details:*\n*Name:* ${name}\n*Phone:* +91 ${phone}\n*Email:* ${email}\n*Address:* ${address}\n*City:* ${city}\n*State:* ${state}\n*PIN Code:* ${pincode}\n\nIs this available?`;
     
     const encodedMessage = encodeURIComponent(message);
     const whatsappNumber = '919317091542';
     
     window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
+    
+    // Clear cart after redirect
+    cart = [];
+    saveCart();
+    updateCartUI();
+    closeCheckout();
 });
 
