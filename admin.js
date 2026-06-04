@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCQoDu0ZDyvhA7HsIWvYqXZi3Ka5w3VE3o",
@@ -203,9 +203,12 @@ onSnapshot(collection(db, "products"), (snapshot) => {
                         <p>${product.price}</p>
                     </div>
                 </div>
-                <button class="toggle-btn ${inStock ? 'in-stock' : 'out-stock'}" data-id="${product.id}" data-instock="${inStock}">
-                    ${inStock ? 'In Stock (All)' : 'Out of Stock (All)'}
-                </button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="toggle-btn ${inStock ? 'in-stock' : 'out-stock'}" data-id="${product.id}" data-instock="${inStock}">
+                        ${inStock ? 'In Stock (All)' : 'Out of Stock (All)'}
+                    </button>
+                    <button class="delete-btn" data-id="${product.id}" style="padding: 10px 15px; border-radius: 5px; background: #F44336; color: white; border: none; font-weight: bold; cursor: pointer;">Delete</button>
+                </div>
             </div>
             ${colorsHTML}
         `;
@@ -258,6 +261,27 @@ onSnapshot(collection(db, "products"), (snapshot) => {
                 console.error("Error updating color stock:", error);
                 alert("Error updating color stock.");
                 e.target.disabled = false;
+            }
+        });
+    });
+
+    // Delete Button Logic
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const id = e.target.getAttribute('data-id');
+            const confirmDelete = confirm("Are you sure you want to delete this product? This action cannot be undone.");
+            
+            if (confirmDelete) {
+                e.target.disabled = true;
+                e.target.textContent = "Deleting...";
+                try {
+                    await deleteDoc(doc(db, "products", id.toString()));
+                } catch (error) {
+                    console.error("Error deleting product:", error);
+                    alert("Failed to delete product.");
+                    e.target.disabled = false;
+                    e.target.textContent = "Delete";
+                }
             }
         });
     });
