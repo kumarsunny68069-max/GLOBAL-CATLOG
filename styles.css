@@ -244,8 +244,9 @@ body {
 
 .hero-stats {
     display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
     opacity: 0;
     animation: fadeInUp 1s ease forwards 0.8s;
     flex-wrap: wrap;
@@ -254,13 +255,16 @@ body {
 
 .hero-stats span {
     font-size: 0.85rem;
-    font-weight: 500;
-    color: #e0e0e0;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #a0a0a0;
+    text-transform: uppercase;
+}
+
+.hero-stats span.dot {
+    color: var(--accent);
+    font-size: 1.2rem;
+    line-height: 0;
 }
 
 
