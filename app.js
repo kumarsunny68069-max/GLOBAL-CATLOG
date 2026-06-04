@@ -456,12 +456,12 @@ checkoutForm.addEventListener('submit', (e) => {
     saveCart();
     updateCartUI();
     
-    // 3. Close Checkout Modal
-    checkoutModal.style.display = 'none';
+    // 3. Close Checkout Modal properly
+    closeCheckout();
     
     // 4. Show Success Modal
     const successModal = document.getElementById('successModal');
-    successModal.style.display = 'flex';
+    successModal.classList.add('active');
     
     // 5. Reset the form
     checkoutForm.reset();
@@ -470,8 +470,8 @@ checkoutForm.addEventListener('submit', (e) => {
 // Setup Success Modal Close Handlers
 const successModal = document.getElementById('successModal');
 document.querySelector('.close-success').addEventListener('click', () => {
-    successModal.style.display = 'none';
+    successModal.classList.remove('active');
 });
 document.getElementById('continueShoppingBtn').addEventListener('click', () => {
-    successModal.style.display = 'none';
+    successModal.classList.remove('active');
 });
