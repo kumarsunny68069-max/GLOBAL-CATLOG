@@ -200,13 +200,14 @@ onSnapshot(collection(db, "products"), (snapshot) => {
                     <img src="${product.image}" alt="${product.title}">
                     <div class="product-details">
                         <h3>${product.title}</h3>
-                        <p>${product.price}</p>
+                        <p>${product.originalPrice ? `<s style="color:#aaa;">${product.originalPrice}</s> ` : ''}${product.price}</p>
                     </div>
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button class="toggle-btn ${inStock ? 'in-stock' : 'out-stock'}" data-id="${product.id}" data-instock="${inStock}">
                         ${inStock ? 'In Stock (All)' : 'Out of Stock (All)'}
                     </button>
+                    <button class="edit-btn" data-id="${product.id}" style="padding: 10px 15px; border-radius: 5px; background: #2196F3; color: white; border: none; font-weight: bold; cursor: pointer;">Edit</button>
                     <button class="delete-btn" data-id="${product.id}" style="padding: 10px 15px; border-radius: 5px; background: #F44336; color: white; border: none; font-weight: bold; cursor: pointer;">Delete</button>
                 </div>
             </div>
@@ -265,6 +266,62 @@ onSnapshot(collection(db, "products"), (snapshot) => {
         });
     });
 
+    // Edit Button Logic
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            const product = products.find(p => p.id === id);
+            
+            if (product) {
+                // Populate form
+                document.getElementById('editProductId').value = product.id;
+                document.getElementById('pTitle').value = product.title;
+                document.getElementById('pOriginalPrice').value = product.originalPrice || '';
+                document.getElementById('pPrice').value = product.price;
+                document.getElementById('pCategory').value = product.category;
+                document.getElementById('pDesc').value = product.description;
+                
+                // Clear existing color rows
+                colorRows.innerHTML = '';
+                
+                // Add color rows
+                if (product.colors && product.colors.length > 0) {
+                    product.colors.forEach(c => {
+                        const row = document.createElement('div');
+                        row.className = 'color-row form-grid';
+                        row.style.marginTop = '10px';
+                        row.innerHTML = `
+                            <div style="flex:1;">
+                                <label style="font-size:0.8rem; color:#aaa;">Color Name</label>
+                                <input type="text" class="cName" required value="${c.name}">
+                            </div>
+                            <div style="flex:1;">
+                                <label style="font-size:0.8rem; color:#aaa;">Color Image</label>
+                                <input type="file" class="cImage" accept="image/*">
+                                <input type="hidden" class="cExistingImage" value="${c.image}">
+                            </div>
+                            <button type="button" class="remove-color-btn">X</button>
+                        `;
+                        
+                        row.querySelector('.remove-color-btn').addEventListener('click', () => {
+                            row.remove();
+                        });
+                        
+                        colorRows.appendChild(row);
+                    });
+                }
+                
+                // Update UI
+                document.getElementById('addProductSection').scrollIntoView({ behavior: 'smooth' });
+                document.querySelector('#addProductSection h2').textContent = "Edit Product";
+                document.getElementById('submitBtn').textContent = "Save Changes";
+                
+                // Note: Image fields are deliberately left blank. Users only pick if they want to override.
+                window.currentEditProductImage = product.image;
+            }
+        });
+    });
+
     // Delete Button Logic
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
@@ -296,7 +353,8 @@ const addColorBtn = document.getElementById('addColorBtn');
 
 function createColorRow() {
     const row = document.createElement('div');
-    row.className = 'color-row';
+    row.className = 'color-row form-grid';
+    row.style.marginTop = '10px';
     row.innerHTML = `
         <div style="flex:1;">
             <label style="font-size:0.8rem; color:#aaa;">Color Name</label>
@@ -304,7 +362,8 @@ function createColorRow() {
         </div>
         <div style="flex:1;">
             <label style="font-size:0.8rem; color:#aaa;">Color Image</label>
-            <input type="file" class="cImage" accept="image/*" required>
+            <input type="file" class="cImage" accept="image/*">
+            <input type="hidden" class="cExistingImage" value="">
         </div>
         <button type="button" class="remove-color-btn">X</button>
     `;
@@ -368,17 +427,26 @@ if (addProductForm) {
         submitBtn.textContent = "Compressing Images & Saving...";
         
         try {
+            const editId = document.getElementById('editProductId').value;
             const title = document.getElementById('pTitle').value;
+            const originalPrice = document.getElementById('pOriginalPrice').value;
             const price = document.getElementById('pPrice').value;
             const category = document.getElementById('pCategory').value;
             const description = document.getElementById('pDesc').value;
             const baseImageFile = document.getElementById('pImage').files[0];
             
-            // Generate a unique ID (using timestamp)
-            const newId = Date.now();
+            // Generate a unique ID if new, or use editId
+            const productId = editId ? parseInt(editId) : Date.now();
             
-            // Compress Base Image
-            const baseImageUrl = await compressImageToBase64(baseImageFile);
+            // Compress Base Image (if a new one is selected)
+            let baseImageUrl = '';
+            if (baseImageFile) {
+                baseImageUrl = await compressImageToBase64(baseImageFile);
+            } else if (editId && window.currentEditProductImage) {
+                baseImageUrl = window.currentEditProductImage; // keep existing image
+            } else {
+                throw new Error("Base image is required for new products.");
+            }
             
             // Process Colors
             const colors = [];
@@ -388,13 +456,22 @@ if (addProductForm) {
                 const row = colorElements[i];
                 const cName = row.querySelector('.cName').value;
                 const cImageFile = row.querySelector('.cImage').files[0];
+                const cExistingImage = row.querySelector('.cExistingImage').value;
                 
                 // Compress Color Image
-                const cImageUrl = await compressImageToBase64(cImageFile);
+                let cImageUrl = '';
+                if (cImageFile) {
+                    cImageUrl = await compressImageToBase64(cImageFile);
+                } else if (cExistingImage) {
+                    cImageUrl = cExistingImage; // keep existing
+                } else {
+                    throw new Error(`Image required for color ${cName}`);
+                }
                 
                 colors.push({
                     name: cName,
                     image: cImageUrl,
+                    originalPrice: originalPrice,
                     price: price, // defaults to same price
                     inStock: true
                 });
@@ -402,8 +479,9 @@ if (addProductForm) {
             
             // Create Product Object
             const newProduct = {
-                id: newId,
+                id: productId,
                 title: title,
+                originalPrice: originalPrice,
                 price: price,
                 category: category,
                 description: description,
@@ -412,12 +490,16 @@ if (addProductForm) {
                 colors: colors
             };
             
-            // Save to Firestore
-            await setDoc(doc(db, "products", newId.toString()), newProduct);
+            // Save to Firestore (setDoc overwrites perfectly for Edit, creates if new)
+            await setDoc(doc(db, "products", productId.toString()), newProduct);
             
-            alert("Product Added Successfully!");
+            alert(editId ? "Product Updated Successfully!" : "Product Added Successfully!");
+            
             addProductForm.reset();
+            document.getElementById('editProductId').value = '';
+            document.querySelector('#addProductSection h2').textContent = "Add New Product";
             colorRows.innerHTML = ''; // clear colors
+            window.currentEditProductImage = null;
             
         } catch (error) {
             console.error("Error adding product:", error);

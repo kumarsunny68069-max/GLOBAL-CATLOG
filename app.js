@@ -55,12 +55,13 @@ function renderProducts(filter = 'all') {
         card.style.animationDelay = `${index * 0.1}s`;
         card.innerHTML = `
             <div class="product-image-container">
-                <img src="${product.image}" alt="${product.title}">
+                <img src="${product.image}" alt="${product.title}" loading="lazy">
                 ${product.inStock === false ? '<div class="out-of-stock-badge">Out of Stock</div>' : ''}
+                ${product.originalPrice ? '<div class="sale-badge" style="position:absolute; top:10px; left:10px; background:var(--accent); color:black; padding:5px 10px; border-radius:5px; font-size:0.8rem; font-weight:bold; z-index:2;">SALE</div>' : ''}
             </div>
             <div class="product-info">
                 <h3 class="product-title">${product.title}</h3>
-                <p class="product-price">${product.price}</p>
+                <p class="product-price">${product.originalPrice ? `<s style="color:#aaa; font-size:0.9em; margin-right:5px;">${product.originalPrice}</s>` : ''}${product.price}</p>
             </div>
         `;
         
@@ -173,8 +174,19 @@ function openModal(product) {
         });
     } else {
         if (colorSelectorContainer) colorSelectorContainer.style.display = 'none';
+        
+        currentProduct = product;
+        selectedColor = null;
+        selectedSize = null;
+        
         modalImage.src = product.image;
-        modalPrice.textContent = product.price;
+        
+        // Original price logic for modal
+        const priceHTML = product.originalPrice ? 
+            `<s style="color:#aaa; font-size:0.8em; margin-right:8px;">${product.originalPrice}</s>${product.price}` : 
+            product.price;
+            
+        modalPrice.innerHTML = priceHTML;
     }
     
     modalTitle.textContent = product.title;
