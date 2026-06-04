@@ -265,3 +265,100 @@ onSnapshot(collection(db, "products"), (snapshot) => {
     console.error("Firestore Error:", error);
     statusMessage.textContent = "Error connecting to Database. Have you clicked 'Create Database' in Firebase Console?";
 });
+
+// Dynamic Color Fields Logic
+const colorRows = document.getElementById('colorRows');
+const addColorBtn = document.getElementById('addColorBtn');
+
+function createColorRow() {
+    const row = document.createElement('div');
+    row.className = 'color-row';
+    row.innerHTML = `
+        <div style="flex:1;">
+            <label style="font-size:0.8rem; color:#aaa;">Color Name</label>
+            <input type="text" class="cName" required placeholder="e.g. Red">
+        </div>
+        <div style="flex:1;">
+            <label style="font-size:0.8rem; color:#aaa;">Color Image URL</label>
+            <input type="text" class="cImage" required placeholder="e.g. assets/color.png">
+        </div>
+        <button type="button" class="remove-color-btn">X</button>
+    `;
+    row.querySelector('.remove-color-btn').addEventListener('click', () => {
+        row.remove();
+    });
+    return row;
+}
+
+if (addColorBtn) {
+    addColorBtn.addEventListener('click', () => {
+        colorRows.appendChild(createColorRow());
+    });
+}
+
+// Handle Form Submission
+const addProductForm = document.getElementById('addProductForm');
+const submitBtn = document.getElementById('submitBtn');
+
+if (addProductForm) {
+    addProductForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Saving Product...";
+        
+        try {
+            const title = document.getElementById('pTitle').value;
+            const price = document.getElementById('pPrice').value;
+            const category = document.getElementById('pCategory').value;
+            const description = document.getElementById('pDesc').value;
+            const baseImageUrl = document.getElementById('pImage').value;
+            
+            // Generate a unique ID (using timestamp)
+            const newId = Date.now();
+            
+            // Process Colors
+            const colors = [];
+            const colorElements = document.querySelectorAll('.color-row');
+            
+            for (let i = 0; i < colorElements.length; i++) {
+                const row = colorElements[i];
+                const cName = row.querySelector('.cName').value;
+                const cImageUrl = row.querySelector('.cImage').value;
+                
+                colors.push({
+                    name: cName,
+                    image: cImageUrl,
+                    price: price, // defaults to same price
+                    inStock: true
+                });
+            }
+            
+            // Create Product Object
+            const newProduct = {
+                id: newId,
+                title: title,
+                price: price,
+                category: category,
+                description: description,
+                image: baseImageUrl,
+                inStock: true,
+                colors: colors
+            };
+            
+            // Save to Firestore
+            await setDoc(doc(db, "products", newId.toString()), newProduct);
+            
+            alert("Product Added Successfully!");
+            addProductForm.reset();
+            colorRows.innerHTML = ''; // clear colors
+            
+        } catch (error) {
+            console.error("Error adding product:", error);
+            alert("Failed to add product. Make sure Firestore is connected.");
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Add Product";
+        }
+    });
+}
