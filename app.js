@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCQoDu0ZDyvhA7HsIWvYqXZi3Ka5w3VE3o",
@@ -415,7 +415,7 @@ pincodeInput.addEventListener('input', async (e) => {
 });
 
 // Handle WhatsApp Submit
-checkoutForm.addEventListener('submit', (e) => {
+checkoutForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const name = document.getElementById('cName').value;
@@ -447,6 +447,21 @@ checkoutForm.addEventListener('submit', (e) => {
     
     const encodedMessage = encodeURIComponent(message);
     const whatsappNumber = '919317091542';
+    
+    // Save order to Firestore first
+    const orderData = {
+        customerInfo: { name, phone, email, address, city, state, pincode },
+        items: cart.map(item => ({ title: item.title, size: item.size, price: item.price, image: item.image })),
+        totalPrice: total,
+        timestamp: serverTimestamp(),
+        status: "Pending" // Default status
+    };
+    
+    try {
+        await addDoc(collection(db, "orders"), orderData);
+    } catch (err) {
+        console.error("Error saving order to DB:", err);
+    }
     
     // 1. Open WhatsApp in new tab
     window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');

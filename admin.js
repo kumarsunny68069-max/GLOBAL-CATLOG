@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, onSnapshot, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -28,7 +28,9 @@ onAuthStateChanged(auth, (user) => {
         // User is logged in
         loginContainer.style.display = 'none';
         adminDashboard.style.display = 'block';
+        document.getElementById('adminTabs').style.display = 'flex';
         logoutBtn.style.display = 'block';
+        loadOrders(); // Load orders when logged in
     } else {
         // User is logged out
         loginContainer.style.display = 'block';
@@ -36,6 +38,88 @@ onAuthStateChanged(auth, (user) => {
         logoutBtn.style.display = 'none';
     }
 });
+
+// ==============================================
+// TABS LOGIC
+// ==============================================
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.target).classList.add('active');
+    });
+});
+
+// ==============================================
+// ORDERS LOGIC
+// ==============================================
+function loadOrders() {
+    const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
+    onSnapshot(q, (snapshot) => {
+        const ordersList = document.getElementById('ordersList');
+        ordersList.innerHTML = '';
+        
+        if (snapshot.empty) {
+            ordersList.innerHTML = '<p style="text-align:center; color:#aaa;">No orders received yet.</p>';
+            return;
+        }
+        
+        snapshot.forEach(doc => {
+            const order = doc.data();
+            const dateStr = order.timestamp ? order.timestamp.toDate().toLocaleString() : 'Just now';
+            
+            const card = document.createElement('div');
+            card.className = 'order-card';
+            
+            let itemsHtml = order.items.map(item => `
+                <li>
+                    <img src="${item.image}" alt="${item.title}">
+                    <div>
+                        <p style="font-weight:bold; color:#fff; margin:0;">${item.title}</p>
+                        <p style="font-size:0.8rem; margin:0;">Size: ${item.size} | ${item.price}</p>
+                    </div>
+                </li>
+            `).join('');
+            
+            card.innerHTML = `
+                <div class="order-header">
+                    <span class="order-id">Order #${doc.id.slice(-6).toUpperCase()}</span>
+                    <span class="order-date">${dateStr}</span>
+                </div>
+                <div class="order-details-grid">
+                    <div class="order-customer">
+                        <h4 style="color:#d4af37; margin-top:0;">Customer Details</h4>
+                        <p><strong>Name:</strong> ${order.customerInfo.name}</p>
+                        <p><strong>Phone:</strong> +91 ${order.customerInfo.phone}</p>
+                        <p><strong>Email:</strong> ${order.customerInfo.email || 'N/A'}</p>
+                        <p><strong>Address:</strong> ${order.customerInfo.address}</p>
+                        <p><strong>Location:</strong> ${order.customerInfo.city}, ${order.customerInfo.state} - ${order.customerInfo.pincode}</p>
+                    </div>
+                    <div class="order-items">
+                        <h4 style="color:#d4af37; margin-top:0;">Items Ordered</h4>
+                        <ul>${itemsHtml}</ul>
+                        <div class="order-total">Total: ${order.totalPrice}</div>
+                    </div>
+                </div>
+            `;
+            ordersList.appendChild(card);
+        });
+    }, (error) => {
+        console.error("Error loading orders:", error);
+        if(error.code === 'permission-denied') {
+            document.getElementById('ordersList').innerHTML = '<p style="text-align:center; color:#F44336;">Permission Denied. Please update Firestore Rules as instructed.</p>';
+        }
+    });
+}
+
+// ==============================================
+// PRODUCT LOGIC
+// ==============================================
 
 // Handle Login
 loginForm.addEventListener('submit', (e) => {
