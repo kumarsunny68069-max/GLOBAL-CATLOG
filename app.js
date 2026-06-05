@@ -234,6 +234,9 @@ function openModal(product) {
 window.addEventListener('popstate', () => {
     modal.classList.remove('active');
     checkoutModal.classList.remove('active');
+    cartSidebar.classList.remove('active');
+    document.getElementById('myOrdersModal').classList.remove('active');
+    document.getElementById('successModal').classList.remove('active');
     document.body.style.overflow = '';
 });
 
@@ -311,6 +314,9 @@ function saveCart() {
 updateCartUI();
 
 floatingCartBtn.addEventListener('click', () => {
+    if (window.location.hash !== '#modal') {
+        history.pushState(null, '', '#modal');
+    }
     cartSidebar.classList.add('active');
 });
 
@@ -343,6 +349,9 @@ addToCartBtn.addEventListener('click', () => {
     
     // Close modal and open cart sidebar
     closeModal();
+    if (window.location.hash !== '#modal') {
+        history.pushState(null, '', '#modal');
+    }
     cartSidebar.classList.add('active');
 });
 
@@ -361,6 +370,9 @@ checkoutCartBtn.addEventListener('click', () => {
     checkoutSize.textContent = "Multiple";
     checkoutPrice.textContent = cartTotalPrice.textContent;
     
+    if (window.location.hash !== '#modal') {
+        history.pushState(null, '', '#modal');
+    }
     checkoutModal.classList.add('active');
     document.body.style.overflow = 'hidden';
 });
@@ -553,6 +565,9 @@ function renderMyOrders() {
 
 function openMyOrders() {
     renderMyOrders();
+    if (window.location.hash !== '#modal') {
+        history.pushState(null, '', '#modal');
+    }
     myOrdersModal.classList.add('active');
     document.body.style.overflow = 'hidden';
 }

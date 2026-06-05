@@ -663,27 +663,45 @@ body {
 
 .modal-details {
     flex: 1;
-    padding: 3rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
 .modal-details h2 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     margin-bottom: 0.5rem;
 }
 
 .modal-details .price {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: var(--accent);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     font-weight: 600;
 }
 
 .modal-details .description {
     color: var(--text-secondary);
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+@media (min-width: 768px) {
+    .modal-details {
+        padding: 3rem;
+    }
+    .modal-details h2 {
+        font-size: 2rem;
+    }
+    .modal-details .price {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .modal-details .description {
+        margin-bottom: 2rem;
+        font-size: 1rem;
+    }
 }
 
 .color-selector {
