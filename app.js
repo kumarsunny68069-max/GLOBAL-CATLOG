@@ -453,17 +453,22 @@ checkoutForm.addEventListener('submit', async (e) => {
         customerInfo: { name, phone, email, address, city, state, pincode },
         items: cart.map(item => ({ title: item.title, size: item.size, price: item.price, image: item.image })),
         totalPrice: total,
-        timestamp: serverTimestamp(),
+        timestamp: serverTimestamp(), // For Firestore
         status: "Pending" // Default status
     };
     
-    try {
-        await addDoc(collection(db, "orders"), orderData);
-    } catch (err) {
-        console.error("Error saving order to DB:", err);
-    }
+    // Save to LocalStorage for "My Orders" feature (with a string timestamp instead of server object)
+    let localOrderData = { ...orderData, timestamp: new Date().toISOString() };
+    let myOrders = JSON.parse(localStorage.getItem('myOrders')) || [];
+    myOrders.unshift(localOrderData); // Add to beginning
+    localStorage.setItem('myOrders', JSON.stringify(myOrders));
     
-    // 1. Open WhatsApp in new tab
+    // Save order to Firestore first (without awaiting, so we don't block the popup)
+    addDoc(collection(db, "orders"), orderData).catch(err => {
+        console.error("Error saving order to DB:", err);
+    });
+    
+    // 1. Open WhatsApp in new tab IMMEDIATELY
     window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
     
     // 2. Clear Cart and Update UI
@@ -497,3 +502,79 @@ if (sessionStorage.getItem('showSuccessModal') === 'true') {
     sessionStorage.removeItem('showSuccessModal');
     document.getElementById('successModal').classList.add('active');
 }
+
+// ==========================================
+// MY ORDERS LOGIC
+// ==========================================
+const myOrdersBtn = document.getElementById('myOrdersBtn');
+const myOrdersModal = document.getElementById('myOrdersModal');
+const closeMyOrders = document.querySelector('.close-my-orders');
+const myOrdersList = document.getElementById('myOrdersList');
+const viewMyOrdersBtn = document.getElementById('viewMyOrdersBtn');
+
+function renderMyOrders() {
+    let myOrders = JSON.parse(localStorage.getItem('myOrders')) || [];
+    myOrdersList.innerHTML = '';
+    
+    if (myOrders.length === 0) {
+        myOrdersList.innerHTML = '<p style="text-align:center; color:#aaa; margin-top:30px;">You haven\'t placed any orders yet.</p>';
+        return;
+    }
+    
+    myOrders.forEach((order, idx) => {
+        const dateStr = new Date(order.timestamp).toLocaleString();
+        
+        const card = document.createElement('div');
+        card.style.cssText = 'background: #1a1c23; border: 1px solid #333; border-radius: 12px; padding: 20px; margin-bottom: 15px;';
+        
+        let itemsHtml = order.items.map(item => `
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; background:#0f1115; padding:8px; border-radius:6px;">
+                <img src="${item.image}" alt="${item.title}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
+                <div>
+                    <p style="margin:0; font-weight:bold; font-size:0.9rem;">${item.title}</p>
+                    <p style="margin:0; font-size:0.8rem; color:#aaa;">Size: ${item.size} | ${item.price}</p>
+                </div>
+            </div>
+        `).join('');
+        
+        card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:10px;">
+                <span style="font-family:'Bebas Neue', sans-serif; color:#d4af37; font-size:1.2rem; letter-spacing:1px;">Order ${myOrders.length - idx}</span>
+                <span style="color:#aaa; font-size:0.8rem;">${dateStr}</span>
+            </div>
+            <div>${itemsHtml}</div>
+            <div style="text-align:right; font-weight:bold; color:var(--accent); margin-top:10px; padding-top:10px; border-top:1px solid #333;">
+                Total: ${order.totalPrice}
+            </div>
+        `;
+        myOrdersList.appendChild(card);
+    });
+}
+
+function openMyOrders() {
+    renderMyOrders();
+    myOrdersModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+myOrdersBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    openMyOrders();
+});
+
+viewMyOrdersBtn.addEventListener('click', () => {
+    document.getElementById('successModal').classList.remove('active');
+    openMyOrders();
+});
+
+closeMyOrders.addEventListener('click', () => {
+    myOrdersModal.classList.remove('active');
+    document.body.style.overflow = '';
+});
+
+myOrdersModal.addEventListener('click', (e) => {
+    if (e.target === myOrdersModal) {
+        myOrdersModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+});
