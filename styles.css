@@ -110,12 +110,12 @@ body {
 }
 
 .hero {
-    min-height: 55vh;
+    min-height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 4rem 5% 2rem 5%;
+    padding: 6rem 5% 1.5rem 5%; /* Top padding accounts for fixed navbar */
     position: relative;
     overflow: hidden;
     background: var(--bg-dark);
@@ -206,10 +206,10 @@ body {
 }
 
 .hero p {
-    font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+    font-size: clamp(0.85rem, 1.5vw, 1rem);
     color: #b0b0b0;
-    line-height: 1.5;
-    margin-bottom: 2rem;
+    line-height: 1.4;
+    margin-bottom: 1.5rem;
     max-width: 600px;
     opacity: 0;
     animation: fadeInUp 1s ease forwards 0.4s;
@@ -223,16 +223,16 @@ body {
 .cta-btn {
     background: linear-gradient(135deg, var(--accent), #e6c865);
     color: #000;
-    padding: 1.2rem 3rem;
+    padding: 0.8rem 2rem;
     border-radius: 50px;
     font-weight: 800;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     border: none;
     cursor: pointer;
-    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3), inset 0 -3px 0 rgba(0,0,0,0.1);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
 }
@@ -244,13 +244,15 @@ body {
 
 .hero-stats {
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 1.5rem;
-    margin-top: 2.5rem;
+    gap: 10px;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    color: #888;
     opacity: 0;
     animation: fadeInUp 1s ease forwards 0.8s;
     flex-wrap: wrap;
-    justify-content: center;
 }
 
 .hero-stats span {
