@@ -459,9 +459,10 @@ checkoutForm.addEventListener('submit', (e) => {
     // 3. Close Checkout Modal properly
     closeCheckout();
     
-    // 4. Show Success Modal
+    // 4. Show Success Modal and set session flag
     const successModal = document.getElementById('successModal');
     successModal.classList.add('active');
+    sessionStorage.setItem('showSuccessModal', 'true');
     
     // 5. Reset the form
     checkoutForm.reset();
@@ -475,3 +476,9 @@ document.querySelector('.close-success').addEventListener('click', () => {
 document.getElementById('continueShoppingBtn').addEventListener('click', () => {
     successModal.classList.remove('active');
 });
+
+// Check if we need to show the success modal after a refresh/return from WhatsApp
+if (sessionStorage.getItem('showSuccessModal') === 'true') {
+    sessionStorage.removeItem('showSuccessModal');
+    document.getElementById('successModal').classList.add('active');
+}
