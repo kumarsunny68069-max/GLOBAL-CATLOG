@@ -488,12 +488,19 @@ checkoutForm.addEventListener('submit', async (e) => {
     saveCart();
     updateCartUI();
     
-    // 3. Close Checkout Modal properly
-    closeCheckout();
+    // 3. Manually close checkout without triggering history.back() which clears all modals
+    checkoutModal.classList.remove('active');
     
-    // 4. Show Success Modal and set session flag
+    // 4. Show Success Modal 
     const successModal = document.getElementById('successModal');
     successModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Keep #modal state so back button closes success modal
+    if (window.location.hash !== '#modal') {
+        history.pushState(null, '', '#modal');
+    }
+    
     sessionStorage.setItem('showSuccessModal', 'true');
     
     // 5. Reset the form
